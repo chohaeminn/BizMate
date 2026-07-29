@@ -291,3 +291,39 @@ class PortfolioResultResponse(BaseModel):
 class PortfolioGenerateResponse(BaseModel):
     portfolio: PortfolioResultResponse
     items: list[PortfolioItemResponse]
+
+    # =====================================================
+# Tax Schedule
+# =====================================================
+
+class TaxScheduleCreate(BaseModel):
+    title: str = Field(
+        min_length=1,
+        max_length=300,
+    )
+
+    note: str | None = None
+
+    schedule_date: date
+
+
+class TaxScheduleUpdate(BaseModel):
+    title: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=300,
+    )
+
+    note: str | None = None
+
+    schedule_date: date | None = None
+
+
+class TaxScheduleResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    title: str
+    note: str | None
+    schedule_date: date
+    created_at: datetime

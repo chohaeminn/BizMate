@@ -1,0 +1,340 @@
+.tax-detail-screen {
+  background: #f8f9fa;
+}
+
+.tax-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 28px 20px 34px;
+}
+
+.tax-detail-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tax-detail-tags {
+  display: flex;
+  gap: 12px;
+}
+
+.tax-detail-tags span {
+  border-radius: 9999px;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  padding: 8px 17px;
+}
+
+.tax-detail-tags .green {
+  background: #dff2e7;
+  color: #2c9b4c;
+}
+
+.tax-detail-tags .yellow {
+  background: #fff3bd;
+  color: #826815;
+}
+
+.tax-detail-hero h2 {
+  color: #1f2937;
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 42px;
+  margin: 0;
+}
+
+.tax-detail-effect-card {
+  align-items: center;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 112px minmax(0, 1fr);
+  padding: 14px;
+}
+
+.tax-detail-character {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 98px;
+}
+
+.tax-detail-character img {
+  height: auto;
+  width: 86px;
+}
+
+.tax-detail-effect {
+  align-items: center;
+  background: #eef6f1;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 96px;
+  padding: 16px;
+}
+
+.tax-detail-effect span {
+  color: #6b7280;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+}
+
+.tax-detail-effect strong {
+  color: #289743;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 32px;
+}
+
+.tax-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.tax-detail-section h3 {
+  color: #1f2937;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 32px;
+  margin: 0;
+}
+
+.tax-detail-section p {
+  color: #5f6368;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 32px;
+  margin: 0;
+}
+
+.tax-detail-check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tax-detail-check-list li {
+  align-items: center;
+  color: #262b33;
+  display: flex;
+  font-size: 14px;
+  font-weight: 400;
+  gap: 16px;
+  line-height: 24px;
+}
+
+.tax-detail-check-list i {
+  border: 3px solid #2f9d4a;
+  border-radius: 9999px;
+  display: block;
+  flex: 0 0 28px;
+  height: 28px;
+  position: relative;
+  width: 28px;
+}
+
+.tax-detail-check-list i::after {
+  border: solid #2f9d4a;
+  border-width: 0 3px 3px 0;
+  content: "";
+  height: 12px;
+  left: 8px;
+  position: absolute;
+  top: 4px;
+  transform: rotate(45deg);
+  width: 6px;
+}
+
+.tax-detail-table {
+  background: #fff;
+  border: 1px solid #dfe3e8;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.tax-detail-table-row {
+  align-items: center;
+  border-top: 1px solid #e5e7eb;
+  display: grid;
+  grid-template-columns: 1.05fr 1.15fr 1fr;
+  min-height: 64px;
+}
+
+.tax-detail-table-row:first-child {
+  border-top: 0;
+}
+
+.tax-detail-table-row.head {
+  background: #f6f7f8;
+}
+
+.tax-detail-table-row.highlight {
+  background: #fffaf0;
+}
+
+.tax-detail-table-row span,
+.tax-detail-table-row strong {
+  color: #30343a;
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  padding: 12px 16px;
+}
+
+.tax-detail-table-row span {
+  text-align: right;
+}
+
+.tax-detail-table-row.head span {
+  color: #6b7280;
+}
+
+.tax-detail-table-row.highlight span:last-child {
+  color: #2f9d4a;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.tax-detail-note {
+  color: #777 !important;
+  font-size: 10px !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
+}
+
+.tax-detail-reference {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  padding: 20px;
+}
+
+.tax-detail-reference > i {
+  border: 3px solid #dc2626;
+  border-radius: 2px;
+  display: block;
+  height: 28px;
+  position: relative;
+  width: 22px;
+}
+
+.tax-detail-reference > i::before,
+.tax-detail-reference > i::after {
+  background: #dc2626;
+  border-radius: 9999px;
+  content: "";
+  left: 5px;
+  position: absolute;
+}
+
+.tax-detail-reference > i::before {
+  height: 3px;
+  top: 10px;
+  width: 10px;
+}
+
+.tax-detail-reference > i::after {
+  box-shadow: 0 6px 0 #dc2626;
+  height: 3px;
+  top: 16px;
+  width: 12px;
+}
+
+.tax-detail-reference strong {
+  color: #1f2937;
+  display: block;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.tax-detail-reference span {
+  color: #6b7280;
+  display: block;
+  font-size: 13px;
+  line-height: 22px;
+}
+
+.tax-detail-reference button {
+  appearance: none;
+  background: #f3f4f6;
+  border: 0;
+  border-radius: 10px;
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  padding: 16px 20px;
+  white-space: nowrap;
+}
+
+.tax-detail-back-button {
+  align-items: center;
+  background: #fff;
+  border: 2px solid #ffcc00;
+  border-radius: 14px;
+  color: #1f2937;
+  display: flex;
+  font-size: 18px;
+  font-weight: 400;
+  justify-content: center;
+  line-height: 28px;
+  margin-top: 10px;
+  min-height: 72px;
+  text-decoration: none;
+}
+
+@media (max-width: 359px) {
+  .tax-detail-content {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .tax-detail-hero h2 {
+    font-size: 26px;
+    line-height: 36px;
+  }
+
+  .tax-detail-effect-card {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+
+  .tax-detail-effect strong {
+    font-size: 18px;
+  }
+
+  .tax-detail-table-row span,
+  .tax-detail-table-row strong {
+    font-size: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .tax-detail-reference {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .tax-detail-reference button {
+    grid-column: 1 / -1;
+  }
+}

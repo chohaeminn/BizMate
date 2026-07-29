@@ -1,0 +1,604 @@
+.tax-guide-screen {
+  background:
+    linear-gradient(90deg, #f8f9fa 0%, #f8f9fa 100%),
+    linear-gradient(90deg, #fff 0%, #fff 100%);
+}
+
+.tax-guide-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px 20px 20px;
+}
+
+.tax-guide-title {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.tax-guide-title h2 {
+  color: #1f2937;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 32px;
+  margin: 0 0 4px;
+  white-space: nowrap;
+}
+
+.tax-guide-title p {
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+
+.tax-guide-date {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex: 0 0 154px;
+  gap: 8px;
+  justify-content: center;
+  padding: 9px 13px;
+}
+
+.tax-guide-date strong {
+  color: #1f2937;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.tax-guide-recommend,
+.tax-guide-estimate {
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 25px;
+}
+
+.tax-guide-recommend {
+  background: #d8f3e6;
+  border: 1px solid #588b73;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  gap: 16px;
+}
+
+.tax-guide-card-heading,
+.tax-guide-estimate-heading,
+.tax-guide-breakdown-row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tax-guide-card-heading h2,
+.tax-guide-estimate-heading h2 {
+  color: #1f2937;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  margin: 0;
+}
+
+.tax-guide-card-heading span {
+  background: #ecfdf5;
+  border-radius: 6px;
+  color: #059669;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  padding: 4px 8px;
+}
+
+.tax-guide-recommend-main {
+  display: flex;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.tax-guide-umbrella {
+  align-items: center;
+  aspect-ratio: 1;
+  background: #fff;
+  border: 1px solid #ecfdf5;
+  border-radius: 9999px;
+  display: flex;
+  flex: 0 0 100px;
+  justify-content: center;
+}
+
+.tax-guide-recommend-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.tax-guide-recommend-copy h3 {
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.5px;
+  margin: 0 0 4px;
+}
+
+.tax-guide-recommend-copy p {
+  color: #000;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+
+.tax-guide-recommend-copy p strong,
+.tax-guide-recommend-stats strong {
+  color: #059669;
+}
+
+.tax-guide-recommend-copy ul {
+  display: flex;
+  flex-direction: column;
+  gap: 5.5px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.tax-guide-recommend-copy li {
+  align-items: center;
+  color: #000;
+  display: flex;
+  font-size: 10px;
+  font-weight: 500;
+  gap: 8px;
+  line-height: 16.5px;
+  white-space: nowrap;
+}
+
+.tax-guide-recommend-stats {
+  border-top: 1px solid #f3f4f5;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-top: 11px;
+}
+
+.tax-guide-recommend-stats span {
+  color: #000;
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16.5px;
+  margin-bottom: 4px;
+}
+
+.tax-guide-recommend-stats strong {
+  display: block;
+  font-size: 20px;
+  line-height: 28px;
+  white-space: nowrap;
+}
+
+.tax-guide-difficulty {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.tax-guide-difficulty strong {
+  font-size: 18px;
+}
+
+.tax-guide-difficulty i {
+  background: #f3f4f5;
+  border-radius: 9999px;
+  display: block;
+  flex: 1;
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tax-guide-difficulty i::before {
+  background: #10b981;
+  border-radius: inherit;
+  content: "";
+  inset: 0 50% 0 0;
+  position: absolute;
+}
+
+.tax-guide-detail-button {
+  align-items: center;
+  appearance: none;
+  background: #fff;
+  border: 1px solid #426152;
+  border-radius: 12px;
+  color: #000;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 4px;
+  justify-content: center;
+  line-height: 20px;
+  padding: 13px 17px;
+  text-decoration: none;
+  width: 100%;
+}
+
+.tax-guide-estimate {
+  background: #fff;
+  border: 1px solid #eff6ff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.tax-guide-estimate-heading > div {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.tax-guide-estimate-heading h2 {
+  font-weight: 500;
+}
+
+.tax-guide-live-button {
+  align-items: center;
+  appearance: none;
+  background: #eff6ff;
+  border: 0;
+  border-radius: 9999px;
+  color: #2563eb;
+  cursor: pointer;
+  display: flex;
+  font-size: 10px;
+  font-weight: 500;
+  gap: 8px;
+  height: 22px;
+  line-height: 15px;
+  min-width: 96px;
+  padding: 2px 8px;
+}
+
+.tax-guide-live-button i {
+  background: #3b82f6;
+  border-radius: 9999px;
+  display: block;
+  height: 7px;
+  width: 7px;
+}
+
+.tax-guide-live-button:disabled {
+  cursor: default;
+}
+
+.tax-guide-live-button.loading i {
+  animation: taxGuideSpin 0.8s linear infinite;
+  background: transparent;
+  border: 2px solid rgba(37, 99, 235, 0.25);
+  border-top-color: #2563eb;
+  box-sizing: border-box;
+  height: 10px;
+  width: 10px;
+}
+
+.tax-guide-estimate-heading p {
+  color: #9ca3af;
+  font-size: 11px;
+  line-height: 16.5px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.tax-guide-result-only {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 2px 0 6px;
+}
+
+.tax-guide-donut {
+  align-items: center;
+  background:
+    radial-gradient(circle, #fff 0 52%, transparent 53%),
+    conic-gradient(#3b82f6 0 57%, #22c55e 57% 88%, #ef4444 88% 100%);
+  border-radius: 9999px;
+  display: flex;
+  flex: 0 0 178px;
+  height: 178px;
+  justify-content: center;
+  position: relative;
+  width: 178px;
+}
+
+.tax-guide-donut-hole {
+  align-items: center;
+  background: #fff;
+  border-radius: 9999px;
+  display: flex;
+  flex-direction: column;
+  height: 108px;
+  justify-content: center;
+  padding: 8px;
+  text-align: center;
+  width: 108px;
+}
+
+.tax-guide-donut-hole span {
+  color: #9ca3af;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+}
+
+.tax-guide-donut-hole strong {
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+.tax-guide-donut-hole p {
+  color: #3b82f6;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 13px;
+  margin: 2px 0 0;
+}
+
+.tax-guide-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tax-guide-breakdown-row span {
+  align-items: center;
+  color: #4b5563;
+  display: flex;
+  font-size: 12px;
+  font-weight: 500;
+  gap: 8px;
+  line-height: 16px;
+}
+
+.tax-guide-breakdown-row i {
+  border-radius: 2px;
+  display: block;
+  height: 10px;
+  width: 10px;
+}
+
+.tax-guide-breakdown-row i.blue {
+  background: #3b82f6;
+}
+
+.tax-guide-breakdown-row i.green {
+  background: #22c55e;
+}
+
+.tax-guide-breakdown-row i.red {
+  background: #ef4444;
+}
+
+.tax-guide-breakdown-row strong {
+  color: #1f2937;
+  font-size: 14px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.tax-guide-ai-tip {
+  align-items: center;
+  background: rgba(239, 246, 255, 0.5);
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  padding: 17px;
+}
+
+.tax-guide-ai-tip p {
+  color: #2563eb;
+  font-size: 11px;
+  line-height: 16.5px;
+  margin: 0 0 4px;
+}
+
+.tax-guide-ai-tip strong {
+  color: #1f2937;
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.tax-guide-ai-tip strong span {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.tax-guide-robot {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dbeafe;
+  border-radius: 9999px;
+  display: flex;
+  height: 48px;
+  justify-content: center;
+  width: 48px;
+}
+
+.tax-guide-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tax-guide-metric {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #f3f4f5;
+  border-radius: 16px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  gap: 16px;
+  padding: 17px;
+}
+
+.tax-guide-metric-icon {
+  align-items: center;
+  border-radius: 12px;
+  display: flex;
+  height: 48px;
+  justify-content: center;
+  width: 48px;
+}
+
+.tax-guide-metric-icon.blue {
+  background: #eff6ff;
+}
+
+.tax-guide-metric-icon.green {
+  background: #ecfdf5;
+}
+
+.tax-guide-metric-icon.red {
+  background: #fff1f2;
+}
+
+.tax-guide-tax-icon {
+  border: 2px solid #ef4444;
+  border-radius: 4px;
+  display: block;
+  height: 22px;
+  position: relative;
+  width: 18px;
+}
+
+.tax-guide-tax-icon::before,
+.tax-guide-tax-icon::after {
+  background: #ef4444;
+  border-radius: 9999px;
+  content: "";
+  left: 4px;
+  position: absolute;
+}
+
+.tax-guide-tax-icon::before {
+  height: 2px;
+  top: 6px;
+  width: 8px;
+}
+
+.tax-guide-tax-icon::after {
+  box-shadow: 0 5px 0 #ef4444;
+  height: 2px;
+  top: 11px;
+  width: 10px;
+}
+
+.tax-guide-metric p {
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16.5px;
+  margin: 0;
+}
+
+.tax-guide-metric strong {
+  color: #1f2937;
+  display: block;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.tax-guide-metric span {
+  color: #9ca3af;
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 15px;
+}
+
+.tax-guide-metric span.blue-copy {
+  color: #3b82f6;
+}
+
+@keyframes taxGuideSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 359px) {
+  .tax-guide-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .tax-guide-title {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tax-guide-date {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  .tax-guide-recommend,
+  .tax-guide-estimate {
+    padding: 18px;
+  }
+
+  .tax-guide-recommend-main {
+    gap: 12px;
+  }
+
+  .tax-guide-umbrella {
+    flex-basis: 76px;
+  }
+
+  .tax-guide-umbrella img {
+    height: 50px;
+    width: 50px;
+  }
+
+  .tax-guide-recommend-copy li {
+    white-space: normal;
+  }
+
+  .tax-guide-estimate-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tax-guide-breakdown-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .tax-guide-donut {
+    align-self: center;
+    flex-basis: 156px;
+    height: 156px;
+    width: 156px;
+  }
+
+  .tax-guide-donut-hole {
+    height: 96px;
+    width: 96px;
+  }
+
+  .tax-guide-donut-hole strong {
+    font-size: 14px;
+  }
+}

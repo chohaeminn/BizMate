@@ -12,6 +12,7 @@
 Node.js 의존성을 설치합니다.
 
 ```bash
+cd front
 npm install
 ```
 
@@ -32,18 +33,21 @@ AZURE_OPENAI_API_VERSION=2024-10-21
 프론트엔드 개발 서버:
 
 ```bash
+cd front
 npm run dev
 ```
 
 기본 접속 주소는 `http://localhost:3000`입니다. 특정 포트가 필요하면 아래처럼 실행합니다.
 
 ```bash
+cd front
 npm run dev -- -p 3002
 ```
 
 ## Build
 
 ```bash
+cd front
 npm run build
 npm run start
 ```

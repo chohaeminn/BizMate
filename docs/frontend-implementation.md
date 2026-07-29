@@ -15,6 +15,8 @@ Figma 기반 모바일 화면과 주요 전환 흐름을 Next.js Pages Router로
 - `/support-programs/apply/status`: 신청 현황 화면
 - `/support-programs/apply/consult`: 추가 상담 예약 화면
 - `/support-programs/apply/consult/complete`: 상담 예약 완료 화면
+- `/tax-saving`: 스마트 절세 캘린더 화면
+- `/tax-saving/guide`: AI 절세 추천 및 실시간 예상 세액 화면
 
 ## Folder Structure
 
@@ -56,7 +58,18 @@ src/
   data/
     supportPrograms.ts
 public/
-  figma-assets/
+  landing/
+  service/
+  tax-saving/
+  interest/
+  support-program-list/
+  support-program-detail/
+  peer-analysis/
+  apply/
+  apply-complete/
+  apply-status/
+  consult/
+  consult-complete/
 ```
 
 백엔드는 별도 파트에서 관리하므로, 프론트엔드 화면 컴포넌트는 `src/features`에 둡니다. Next 라우팅은 `src/pages`에서 담당합니다.
@@ -69,7 +82,8 @@ public/
 - `src/styles/interest.css`: 관심사업 등록 화면 전용 스타일입니다.
 - `src/styles/support-program-*.css`: 지원사업 목록/상세/신청/상담 화면별 스타일입니다.
 - Tailwind는 사용하지 않습니다. Figma에서 받은 Tailwind 형태의 참고 코드를 현재 프로젝트의 일반 CSS로 변환했습니다.
-- Figma asset URL은 만료될 수 있으므로 `public/figma-assets`에 내려받아 로컬 정적 asset으로 사용합니다.
+- Figma asset URL은 만료될 수 있으므로 `public/{page-or-flow}`에 내려받아 로컬 정적 asset으로 사용합니다.
+- 새 Figma 화면을 추가할 때는 기존 파일을 한 폴더에 섞지 않고 화면 또는 플로우 단위 하위 폴더를 먼저 만든 뒤 참조 경로를 연결합니다.
 
 ## Responsive Design
 
@@ -132,6 +146,10 @@ Figma 기준은 약 `389px-390px` 모바일 폭이지만, 실제 구현은 모�
   -> /support-programs/apply/consult/complete?day={day}&time={time}
   나중에 하기
   -> /support-programs
+
+/tax-saving
+  AI 절세 가이드 보기
+  -> /tax-saving/guide
 ```
 
 ## Integration Notes

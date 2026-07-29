@@ -2,21 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 
 const steps = [
-  { label: "본인 인증", icon: "/figma-assets/status-step-user.svg", done: true },
-  { label: "사업자 인\n증", icon: "/figma-assets/status-step-business.svg", done: true },
-  { label: "신청정보\n입력", icon: "/figma-assets/status-step-form.svg", done: true },
-  { label: "자동 서류\n제출", icon: "/figma-assets/status-step-upload.svg", active: true },
-  { label: "심사", icon: "/figma-assets/status-step-review.svg" },
-  { label: "대출 실행", icon: "/figma-assets/status-step-loan.svg" },
+  { label: "본인 인증", icon: "/apply-status/status-step-user.svg", done: true },
+  { label: "사업자 인\n증", icon: "/apply-status/status-step-business.svg", done: true },
+  { label: "신청정보\n입력", icon: "/apply-status/status-step-form.svg", done: true },
+  { label: "자동 서류\n제출", icon: "/apply-status/status-step-upload.svg", active: true },
+  { label: "심사", icon: "/apply-status/status-step-review.svg" },
+  { label: "대출 실행", icon: "/apply-status/status-step-loan.svg" },
 ];
 
 const documents = [
-  { label: "사업자등록증", status: "제출 완료", tone: "done", icon: "/figma-assets/status-doc-building.svg" },
-  { label: "신분증", status: "제출 완료", tone: "done", icon: "/figma-assets/status-doc-id.svg" },
-  { label: "매출 관련 자료", status: "제출 완료", tone: "done", icon: "/figma-assets/status-doc-sales.svg" },
-  { label: "국세 납세증명", status: "제출 완료", tone: "done", icon: "/figma-assets/status-doc-building.svg" },
-  { label: "지방세 납세증명", status: "제출 중", tone: "progress", icon: "/figma-assets/status-doc-tax.svg" },
-  { label: "4대보험 사업장 가입내역", status: "대기 중", tone: "waiting", icon: "/figma-assets/status-doc-tax.svg" },
+  { label: "사업자등록증", status: "제출 완료", tone: "done", icon: "/apply-status/status-doc-building.svg" },
+  { label: "신분증", status: "제출 완료", tone: "done", icon: "/apply-status/status-doc-id.svg" },
+  { label: "매출 관련 자료", status: "제출 완료", tone: "done", icon: "/apply-status/status-doc-sales.svg" },
+  { label: "국세 납세증명", status: "제출 완료", tone: "done", icon: "/apply-status/status-doc-building.svg" },
+  { label: "지방세 납세증명", status: "제출 중", tone: "progress", icon: "/apply-status/status-doc-tax.svg" },
+  { label: "4대보험 사업장 가입내역", status: "대기 중", tone: "waiting", icon: "/apply-status/status-doc-tax.svg" },
 ];
 
 export default function SupportProgramApplyStatusPage() {
@@ -26,19 +26,19 @@ export default function SupportProgramApplyStatusPage() {
         <header className="status-header">
           <div className="status-header-left">
             <Link href="/support-programs/apply/complete" className="icon-button" aria-label="이전 화면으로 이동">
-              <Image src="/figma-assets/status-back.svg" alt="" width={24} height={24} />
+              <Image src="/apply-status/status-back.svg" alt="" width={24} height={24} />
             </Link>
             <h1>KB BizMate AI</h1>
           </div>
           <div className="status-header-actions">
             <button className="icon-button" type="button" aria-label="검색">
-              <Image src="/figma-assets/status-search.svg" alt="" width={24} height={24} />
+              <Image src="/apply-status/status-search.svg" alt="" width={24} height={24} />
             </button>
             <Link href="/" className="icon-button" aria-label="홈으로 이동">
-              <Image src="/figma-assets/status-home.svg" alt="" width={24} height={24} />
+              <Image src="/apply-status/status-home.svg" alt="" width={24} height={24} />
             </Link>
             <button className="icon-button" type="button" aria-label="메뉴 열기">
-              <Image src="/figma-assets/status-menu.svg" alt="" width={24} height={24} />
+              <Image src="/apply-status/status-menu.svg" alt="" width={24} height={24} />
             </button>
           </div>
         </header>
@@ -69,7 +69,7 @@ export default function SupportProgramApplyStatusPage() {
                 </div>
                 <span className="status-step-state">
                   {step.done ? (
-                    <Image src="/figma-assets/status-step-done.svg" alt="" width={12} height={12} />
+                    <Image src="/apply-status/status-step-done.svg" alt="" width={12} height={12} />
                   ) : (
                     index + 1
                   )}
@@ -102,10 +102,10 @@ export default function SupportProgramApplyStatusPage() {
                     <Image
                       src={
                         document.tone === "done"
-                          ? "/figma-assets/status-success.svg"
+                          ? "/apply-status/status-success.svg"
                           : document.tone === "progress"
-                            ? "/figma-assets/status-sync.svg"
-                            : "/figma-assets/status-wait.svg"
+                            ? "/apply-status/status-sync.svg"
+                            : "/apply-status/status-wait.svg"
                       }
                       alt=""
                       width={20}
@@ -122,12 +122,12 @@ export default function SupportProgramApplyStatusPage() {
         <div className="status-bottom-cta">
           <Link href="/support-programs/apply/consult" className="status-consult-button">
             추가 상담하기
-            <Image src="/figma-assets/status-arrow.svg" alt="" width={20} height={20} />
+            <Image src="/apply-status/status-arrow.svg" alt="" width={20} height={20} />
           </Link>
 
           <Link href="/service" className="status-home-button">
             홈으로 돌아가기
-            <Image src="/figma-assets/status-arrow.svg" alt="" width={20} height={20} />
+            <Image src="/apply-status/status-arrow.svg" alt="" width={20} height={20} />
           </Link>
         </div>
       </div>

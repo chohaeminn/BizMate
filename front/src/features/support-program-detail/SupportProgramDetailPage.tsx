@@ -37,19 +37,19 @@ export default function SupportProgramDetailPage({
         <header className="detail-header">
           <div className="detail-header-left">
             <Link href="/service" className="icon-button" aria-label="이전 화면으로 이동">
-              <Image src="/figma-assets/detail-back.svg" alt="" width={24} height={24} />
+              <Image src="/support-program-detail/detail-back.svg" alt="" width={24} height={24} />
             </Link>
             <h1>KB BizMate AI</h1>
           </div>
           <div className="detail-header-actions">
             <button className="icon-button" type="button" aria-label="검색">
-              <Image src="/figma-assets/detail-search.svg" alt="" width={24} height={24} />
+              <Image src="/support-program-detail/detail-search.svg" alt="" width={24} height={24} />
             </button>
             <Link href="/" className="icon-button" aria-label="홈으로 이동">
-              <Image src="/figma-assets/detail-home.svg" alt="" width={24} height={24} />
+              <Image src="/support-program-detail/detail-home.svg" alt="" width={24} height={24} />
             </Link>
             <button className="icon-button" type="button" aria-label="메뉴 열기">
-              <Image src="/figma-assets/detail-menu.svg" alt="" width={24} height={24} />
+              <Image src="/support-program-detail/detail-menu.svg" alt="" width={24} height={24} />
             </button>
           </div>
         </header>
@@ -57,7 +57,7 @@ export default function SupportProgramDetailPage({
         <div className="detail-content">
           <section className="program-hero" aria-labelledby="program-title">
             <div className="ai-chip">
-              <Image src="/figma-assets/detail-ai-spark.svg" alt="" width={11} height={10} />
+              <Image src="/support-program-detail/detail-ai-spark.svg" alt="" width={11} height={10} />
               <span>AI 추천</span>
             </div>
             <h2 id="program-title">
@@ -94,14 +94,14 @@ export default function SupportProgramDetailPage({
           <section className="ai-analysis-card" aria-labelledby="analysis-title">
             <div className="analysis-copy">
               <div className="analysis-label">
-                <Image src="/figma-assets/detail-ai-code.svg" alt="" width={16} height={16} />
+                <Image src="/support-program-detail/detail-ai-code.svg" alt="" width={16} height={16} />
                 <span>AI 분석 결과</span>
               </div>
               <h2 id="analysis-title">{program.analysisTitle}</h2>
               <ul>
                 {program.analysisItems.map((item) => (
                   <li key={item}>
-                    <Image src="/figma-assets/detail-check.svg" alt="" width={8} height={8} />
+                    <Image src="/support-program-detail/detail-check.svg" alt="" width={8} height={8} />
                     {item}
                   </li>
                 ))}
@@ -130,7 +130,7 @@ export default function SupportProgramDetailPage({
               <h2>문의기관</h2>
               <div className="info-block">
                 <div className="info-icon">
-                  <Image src="/figma-assets/detail-phone.svg" alt="" width={20} height={20} />
+                  <Image src="/support-program-detail/detail-phone.svg" alt="" width={20} height={20} />
                 </div>
                 <div>
                   <strong>{program.organizationName}</strong>
@@ -146,7 +146,7 @@ export default function SupportProgramDetailPage({
               <h2>필요 서류</h2>
               <div className="info-block">
                 <div className="info-icon">
-                  <Image src="/figma-assets/detail-doc.svg" alt="" width={20} height={20} />
+                  <Image src="/support-program-detail/detail-doc.svg" alt="" width={20} height={20} />
                 </div>
                 <ul>
                   {program.requiredDocuments.map((document) => (
@@ -173,13 +173,13 @@ export default function SupportProgramDetailPage({
             aria-pressed={isInterested}
           >
             <span className="detail-star-icon" aria-hidden="true">
-              <Image src="/figma-assets/detail-star.svg" alt="" width={18} height={20} />
+              <Image src="/support-program-detail/detail-star.svg" alt="" width={18} height={20} />
             </span>
             관심사업 등록
           </button>
           <Link href="/support-programs/apply" className="detail-apply-button">
             신청하기
-            <Image src="/figma-assets/detail-arrow.svg" alt="" width={20} height={20} />
+            <Image src="/support-program-detail/detail-arrow.svg" alt="" width={20} height={20} />
           </Link>
         </div>
 

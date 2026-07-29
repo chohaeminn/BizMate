@@ -1,0 +1,329 @@
+.tax-vat-screen {
+  background: #f8f9fa;
+}
+
+.tax-vat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 40px 16px 0;
+}
+
+.tax-vat-hero {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tax-vat-title-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tax-vat-title-row {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.tax-vat-title-row span {
+  background: #ffdad6;
+  border-radius: 4px;
+  color: #e02020;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  padding: 4px 8px;
+}
+
+.tax-vat-title-copy h2 {
+  color: #262626;
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 40px;
+  margin: 4px 0 0;
+}
+
+.tax-vat-title-copy p {
+  color: #e02020;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0;
+}
+
+.tax-vat-card {
+  background: rgba(255, 255, 255, 0);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+
+.tax-vat-card h3,
+.tax-vat-section h3 {
+  color: #262626;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 32px;
+  margin: 0;
+}
+
+.tax-vat-overview {
+  border-top: 1px solid #e1e3e4;
+  margin: 0;
+}
+
+.tax-vat-overview div {
+  border-bottom: 1px solid #f3f4f5;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 96px minmax(0, 1fr);
+  padding: 12px 0 13px;
+}
+
+.tax-vat-overview div:last-child {
+  border-bottom: 0;
+}
+
+.tax-vat-overview dt {
+  color: #5f5e5e;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.tax-vat-overview dd {
+  color: #191c1d;
+  font-size: 14px;
+  line-height: 24px;
+  margin: 0;
+  min-width: 0;
+}
+
+.tax-vat-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tax-vat-step-scroll {
+  display: flex;
+  gap: 8px;
+  margin: 0 -16px;
+  overflow-x: auto;
+  padding: 8px 16px 12px;
+  scrollbar-width: none;
+}
+
+.tax-vat-step-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.tax-vat-step-scroll button {
+  align-items: center;
+  appearance: none;
+  background: #f3f4f5;
+  border: 1px solid #e1e3e4;
+  border-radius: 9999px;
+  color: #5f5e5e;
+  display: flex;
+  flex: 0 0 auto;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 4px;
+  line-height: 24px;
+  padding: 9px 17px;
+}
+
+.tax-vat-step-scroll button.active {
+  background: #ffcc00;
+  border-color: #ffcc00;
+  color: #6f5700;
+}
+
+.tax-vat-step-scroll span {
+  align-items: center;
+  background: #5f5e5e;
+  border-radius: 9999px;
+  color: #f3f4f5;
+  display: flex;
+  font-size: 10px;
+  font-weight: 400;
+  height: 20px;
+  justify-content: center;
+  line-height: 15px;
+  width: 20px;
+}
+
+.tax-vat-step-scroll .active span {
+  background: #6f5700;
+  color: #ffcc00;
+}
+
+.tax-vat-guide-box {
+  background: #fff;
+  border: 1px solid #e1e3e4;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 17px;
+}
+
+.tax-vat-guide-box p {
+  color: #4e4632;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  margin: 0;
+}
+
+.tax-vat-guide-box ol {
+  color: #191c1d;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: 500;
+  gap: 8px;
+  line-height: 24px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.tax-vat-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tax-vat-checklist label {
+  align-items: center;
+  background: rgba(255, 255, 255, 0);
+  border: 1px solid #edeeef;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  color: #191c1d;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 12px;
+  line-height: 24px;
+  padding: 17px;
+}
+
+.tax-vat-checklist span {
+  background: #fff;
+  border: 1px solid #80765f;
+  border-radius: 4px;
+  display: block;
+  height: 20px;
+  position: relative;
+  width: 20px;
+}
+
+.tax-vat-checklist span.checked {
+  background: #745b00;
+  border-color: #745b00;
+}
+
+.tax-vat-checklist span.checked::after {
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  content: "";
+  height: 10px;
+  left: 6px;
+  position: absolute;
+  top: 2px;
+  transform: rotate(45deg);
+  width: 5px;
+}
+
+.tax-vat-resources {
+  padding-bottom: 0;
+}
+
+.tax-vat-resources > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tax-vat-resources article {
+  align-items: center;
+  background: #f3f4f5;
+  border-radius: 18px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 25px minmax(0, 1fr) auto;
+  min-height: 74px;
+  padding: 17px 14px;
+}
+
+.tax-vat-resources article > img {
+  height: 32px;
+  width: 25px;
+}
+
+.tax-vat-resources strong {
+  color: #191c1d;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tax-vat-resources button {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: #745b00;
+  display: flex;
+  font-size: 13px;
+  font-weight: 500;
+  gap: 6px;
+  line-height: 24px;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.tax-vat-resources button img {
+  height: 18px;
+  width: 15px;
+}
+
+@media (max-width: 359px) {
+  .tax-vat-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .tax-vat-title-copy h2 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .tax-vat-card {
+    padding: 18px;
+  }
+
+  .tax-vat-overview div {
+    grid-template-columns: 76px minmax(0, 1fr);
+  }
+
+  .tax-vat-overview dt {
+    font-size: 13px;
+  }
+
+  .tax-vat-overview dd {
+    font-size: 12px;
+  }
+}

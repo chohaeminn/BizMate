@@ -2,10 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const filters = [
-  { label: "최근 30일", icon: "/figma-assets/peer-calendar.svg" },
-  { label: "대구", icon: "/figma-assets/peer-location.svg" },
-  { label: "도소매업", icon: "/figma-assets/peer-industry.svg" },
-  { label: "업력 2년 이상", icon: "/figma-assets/peer-career.svg" },
+  { label: "최근 30일", icon: "/peer-analysis/peer-calendar.svg" },
+  { label: "대구", icon: "/peer-analysis/peer-location.svg" },
+  { label: "도소매업", icon: "/peer-analysis/peer-industry.svg" },
+  { label: "업력 2년 이상", icon: "/peer-analysis/peer-career.svg" },
 ];
 
 const rankings = [
@@ -37,19 +37,19 @@ export default function SupportProgramPeerAnalysisPage() {
         <header className="peer-header">
           <div className="peer-header-left">
             <Link href="/support-programs" className="icon-button" aria-label="이전 화면으로 이동">
-              <Image src="/figma-assets/peer-back.svg" alt="" width={24} height={24} />
+              <Image src="/peer-analysis/peer-back.svg" alt="" width={24} height={24} />
             </Link>
             <h1>KB BizMate AI</h1>
           </div>
           <div className="peer-header-actions">
             <button className="icon-button" type="button" aria-label="검색">
-              <Image src="/figma-assets/peer-search.svg" alt="" width={24} height={24} />
+              <Image src="/peer-analysis/peer-search.svg" alt="" width={24} height={24} />
             </button>
             <Link href="/" className="icon-button" aria-label="홈으로 이동">
-              <Image src="/figma-assets/peer-home.svg" alt="" width={24} height={24} />
+              <Image src="/peer-analysis/peer-home.svg" alt="" width={24} height={24} />
             </Link>
             <button className="icon-button" type="button" aria-label="메뉴 열기">
-              <Image src="/figma-assets/peer-menu.svg" alt="" width={24} height={24} />
+              <Image src="/peer-analysis/peer-menu.svg" alt="" width={24} height={24} />
             </button>
           </div>
         </header>
@@ -70,7 +70,7 @@ export default function SupportProgramPeerAnalysisPage() {
               <button type="button" key={filter.label}>
                 <Image src={filter.icon} alt="" width={16} height={16} />
                 {filter.label}
-                <Image src="/figma-assets/peer-chevron-down.svg" alt="" width={12} height={12} />
+                <Image src="/peer-analysis/peer-chevron-down.svg" alt="" width={12} height={12} />
               </button>
             ))}
           </nav>
@@ -98,7 +98,7 @@ export default function SupportProgramPeerAnalysisPage() {
                     </div>
                   </div>
                   <Image
-                    src="/figma-assets/peer-chevron-right.svg"
+                    src="/peer-analysis/peer-chevron-right.svg"
                     alt=""
                     width={20}
                     height={20}

@@ -74,7 +74,7 @@ npm run start
 - `src/data/supportPrograms.ts`: 프론트 임시 지원사업 데이터
 - `src/pages/api/azure-openai`: Azure OpenAI 테스트용 API 라우트
 - `docs`: 구현 방식과 협업 요청 문서
-- `public/figma-assets`: Figma 기반 로컬 정적 에셋
+- `public/{page-or-flow}`: Figma 기반 로컬 정적 에셋
 
 ## Docs
 

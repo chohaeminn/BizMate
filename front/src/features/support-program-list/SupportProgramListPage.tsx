@@ -3,10 +3,10 @@ import Link from "next/link";
 import { supportPrograms } from "@/data/supportPrograms";
 
 const filters = [
-  { label: "지역", icon: "/figma-assets/list-location.svg" },
-  { label: "업종", icon: "/figma-assets/list-building.svg" },
-  { label: "지원분야", icon: "/figma-assets/list-filter.svg" },
-  { label: "정렬", icon: "/figma-assets/list-sort.svg" },
+  { label: "지역", icon: "/support-program-list/list-location.svg" },
+  { label: "업종", icon: "/support-program-list/list-building.svg" },
+  { label: "지원분야", icon: "/support-program-list/list-filter.svg" },
+  { label: "정렬", icon: "/support-program-list/list-sort.svg" },
 ];
 
 export default function SupportProgramListPage() {
@@ -64,26 +64,26 @@ export default function SupportProgramListPage() {
         <header className="program-list-header">
           <div className="program-list-header-left">
             <Link href="/service" className="icon-button" aria-label="이전 화면으로 이동">
-              <Image src="/figma-assets/list-back.svg" alt="" width={24} height={24} />
+              <Image src="/support-program-list/list-back.svg" alt="" width={24} height={24} />
             </Link>
             <h1>KB BizMate AI</h1>
           </div>
           <div className="program-list-header-actions">
             <button className="icon-button" type="button" aria-label="검색">
-              <Image src="/figma-assets/list-search.svg" alt="" width={24} height={24} />
+              <Image src="/support-program-list/list-search.svg" alt="" width={24} height={24} />
             </button>
             <Link href="/" className="icon-button" aria-label="홈으로 이동">
-              <Image src="/figma-assets/list-home.svg" alt="" width={24} height={24} />
+              <Image src="/support-program-list/list-home.svg" alt="" width={24} height={24} />
             </Link>
             <button className="icon-button" type="button" aria-label="메뉴 열기">
-              <Image src="/figma-assets/list-menu.svg" alt="" width={24} height={24} />
+              <Image src="/support-program-list/list-menu.svg" alt="" width={24} height={24} />
             </button>
           </div>
         </header>
 
         <div className="program-list-content">
           <section className="list-summary-card" aria-label="추천 결과 요약">
-            <Image src="/figma-assets/list-bulb.svg" alt="" width={28} height={32} />
+            <Image src="/support-program-list/list-bulb.svg" alt="" width={28} height={32} />
             <div>
               <p>사업장 조건에 맞는</p>
               <strong>
@@ -94,7 +94,7 @@ export default function SupportProgramListPage() {
 
           <section className="peer-summary-card" aria-label="비슷한 조건 사업자 신청 현황">
             <div>
-              <Image src="/figma-assets/list-bulb.svg" alt="" width={28} height={32} />
+              <Image src="/support-program-list/list-bulb.svg" alt="" width={28} height={32} />
               <p>
                 비슷한 조건의 사업자는
                 <br />
@@ -109,7 +109,7 @@ export default function SupportProgramListPage() {
               <button type="button" key={filter.label}>
                 <Image src={filter.icon} alt="" width={16} height={16} />
                 {filter.label}
-                <Image src="/figma-assets/peer-chevron-down.svg" alt="" width={12} height={12} />
+                <Image src="/peer-analysis/peer-chevron-down.svg" alt="" width={12} height={12} />
               </button>
             ))}
           </nav>
@@ -121,7 +121,7 @@ export default function SupportProgramListPage() {
           <section className="list-interest-banner" aria-label="관심사업 알림">
             <div>
               <span>
-                <Image src="/figma-assets/list-star.svg" alt="" width={16} height={16} />
+                <Image src="/support-program-list/list-star.svg" alt="" width={16} height={16} />
               </span>
               <p>
                 관심사업 등록하면

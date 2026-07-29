@@ -24,19 +24,19 @@ export default function SupportProgramConsultCompletePage() {
         <header className="consult-complete-header">
           <div className="consult-complete-header-left">
             <Link href="/support-programs/apply/consult" className="icon-button" aria-label="이전 화면으로 이동">
-              <Image src="/figma-assets/consult-complete-back.svg" alt="" width={24} height={24} />
+              <Image src="/consult-complete/consult-complete-back.svg" alt="" width={24} height={24} />
             </Link>
             <h1>KB BizMate AI</h1>
           </div>
           <div className="consult-complete-header-actions">
             <button className="icon-button" type="button" aria-label="검색">
-              <Image src="/figma-assets/consult-complete-search.svg" alt="" width={24} height={24} />
+              <Image src="/consult-complete/consult-complete-search.svg" alt="" width={24} height={24} />
             </button>
             <Link href="/" className="icon-button" aria-label="홈으로 이동">
-              <Image src="/figma-assets/consult-complete-home.svg" alt="" width={24} height={24} />
+              <Image src="/consult-complete/consult-complete-home.svg" alt="" width={24} height={24} />
             </Link>
             <button className="icon-button" type="button" aria-label="메뉴 열기">
-              <Image src="/figma-assets/consult-complete-menu.svg" alt="" width={24} height={24} />
+              <Image src="/consult-complete/consult-complete-menu.svg" alt="" width={24} height={24} />
             </button>
           </div>
         </header>
@@ -44,7 +44,7 @@ export default function SupportProgramConsultCompletePage() {
         <div className="consult-complete-content">
           <section className="consult-complete-hero" aria-labelledby="consult-complete-title">
             <div className="consult-complete-characters">
-              <Image src="/figma-assets/consult-complete-characters.png" alt="" width={352} height={206} priority />
+              <Image src="/consult-complete/consult-complete-characters.png" alt="" width={352} height={206} priority />
             </div>
             <h2 id="consult-complete-title">상담 예약이 완료되었습니다!</h2>
             <p>
@@ -57,7 +57,7 @@ export default function SupportProgramConsultCompletePage() {
           <section className="consult-complete-details" aria-label="예약 상세 정보">
             <article className="consult-complete-detail-card">
               <span className="consult-complete-detail-icon">
-                <Image src="/figma-assets/consult-complete-calendar.svg" alt="" width={37} height={43} />
+                <Image src="/consult-complete/consult-complete-calendar.svg" alt="" width={37} height={43} />
               </span>
               <div>
                 <p>예약 일시</p>
@@ -67,7 +67,7 @@ export default function SupportProgramConsultCompletePage() {
 
             <article className="consult-complete-detail-card">
               <span className="consult-complete-detail-icon">
-                <Image src="/figma-assets/consult-complete-advisor.svg" alt="" width={39} height={43} />
+                <Image src="/consult-complete/consult-complete-advisor.svg" alt="" width={39} height={43} />
               </span>
               <div>
                 <p>배정 상담사</p>
@@ -77,7 +77,7 @@ export default function SupportProgramConsultCompletePage() {
           </section>
 
           <aside className="consult-complete-notice">
-            <Image src="/figma-assets/consult-complete-notice.svg" alt="" width={15} height={17} />
+            <Image src="/consult-complete/consult-complete-notice.svg" alt="" width={15} height={17} />
             <p>예약 취소 및 변경은 상담 1시간 전까지만 가능합니다.</p>
           </aside>
         </div>

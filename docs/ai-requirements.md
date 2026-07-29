@@ -10,8 +10,7 @@
 | TOP3 추천 사유 | `/service` | AI 추천 맞춤 사업 TOP3 카드 | 카드별 추천 점수와 핵심 근거 표시 |
 | 전체 목록 정렬 근거 | `/support-programs` | 맞춤 사업 전체보기 | 추천 순위와 유사 사업자 기준 설명 |
 | 상세 분석 | `/support-programs/[slug]` | AI 분석 카드 | 해당 지원사업이 사용자에게 맞는 이유와 준비사항 안내 |
-| 유사 사업자 분석 | `/support-programs/peer-analysis` | 비슷한 조건 사업자 화면 | 비슷한 조건의 사업자 신청 경향 요약 |
-| 신청/상담 안내 문구 | `/support-programs/apply/*` | 신청 안내, 상담 예약 안내 | 다음 액션을 간결하게 안내 |
+| 유사 사업자 분석 | `/support-programs/peer-analysis` | 비슷한 조건 사업자 화면 | 비슷한 조건의 사업자 신청 경향 요약? 가능하다면 
 
 ## Input Contract
 

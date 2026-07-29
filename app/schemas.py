@@ -177,3 +177,14 @@ class SupportProgramResponse(BaseModel):
     description: str | None
     source_url: str | None
     created_at: datetime
+
+    # =====================================================
+# Recommendation
+# =====================================================
+
+class RecommendationResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    score: int
+    reason: str
+    program: SupportProgramResponse

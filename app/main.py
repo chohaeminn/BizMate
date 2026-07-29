@@ -4,6 +4,7 @@ from sqlalchemy import text
 from app.database import engine
 from app.routers.profiles import router as profiles_router
 from app.routers.support_programs import router as support_programs_router
+from app.routers.recommendations import router as recommendations_router
 
 
 app = FastAPI(
@@ -15,6 +16,7 @@ app = FastAPI(
 
 app.include_router(profiles_router)
 app.include_router(support_programs_router)
+app.include_router(recommendations_router)
 
 
 @app.get("/")

@@ -55,7 +55,7 @@ export default function SupportProgramConsultPage() {
         <header className="consult-header">
           <div className="consult-header-left">
             <Link href="/support-programs/apply/status" className="icon-button" aria-label="이전 화면으로 이동">
-              <Image src="/figma-assets/consult-back.svg" alt="" width={24} height={24} />
+              <Image src="/consult/consult-back.svg" alt="" width={24} height={24} />
             </Link>
             <h1>KB BizMate AI</h1>
           </div>
@@ -64,7 +64,7 @@ export default function SupportProgramConsultPage() {
         <div className="consult-content">
           <section className="consult-intro" aria-label="상담 안내">
             <div className="consult-character">
-              <Image src="/figma-assets/consult-character.png" alt="" width={73} height={70} priority />
+              <Image src="/consult/consult-character.png" alt="" width={73} height={70} priority />
             </div>
             <div className="consult-speech">
               <p>
@@ -128,7 +128,7 @@ export default function SupportProgramConsultPage() {
           </section>
 
           <aside className="consult-info-box">
-            <Image src="/figma-assets/consult-info.svg" alt="" width={18} height={18} />
+            <Image src="/consult/consult-info.svg" alt="" width={18} height={18} />
             <p>
               상담은 고객님의 <strong>AI 분석 포트폴리오</strong>를 기반으로
               <br />

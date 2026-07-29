@@ -6,14 +6,15 @@ const heroServices = [
   {
     title: "자금조달 포트폴리오",
     description: "맞춤형 자금 계획 수립",
-    icon: "/figma-assets/service-portfolio.svg",
+    icon: "/service/service-portfolio.svg",
     tone: "blue",
   },
   {
     title: "세금 절세 서비스",
     description: "전문가와 함께 세금 절약",
-    icon: "/figma-assets/service-tax.svg",
+    icon: "/service/service-tax.svg",
     tone: "green",
+    href: "/tax-saving",
   },
 ];
 
@@ -22,14 +23,14 @@ const statusItems = [
     label: "추천사업",
     value: "7",
     unit: "개",
-    icon: "/figma-assets/service-recommend.svg",
+    icon: "/service/service-recommend.svg",
     tone: "green",
   },
   {
     label: "신청마감 임박",
     value: "2",
     unit: "개",
-    icon: "/figma-assets/service-deadline.svg",
+    icon: "/service/service-deadline.svg",
     tone: "red",
   },
   {
@@ -48,16 +49,16 @@ export default function ServicePage() {
         <header className="service-header">
           <div className="service-header-left">
             <Link href="/" className="icon-button" aria-label="이전 화면으로 이동">
-              <Image src="/figma-assets/service-back.svg" alt="" width={24} height={24} />
+              <Image src="/service/service-back.svg" alt="" width={24} height={24} />
             </Link>
             <h1>KB BizMate AI</h1>
           </div>
           <div className="service-header-actions">
             <Link href="/" className="icon-button" aria-label="홈으로 이동">
-              <Image src="/figma-assets/service-home.svg" alt="" width={24} height={24} />
+              <Image src="/service/service-home.svg" alt="" width={24} height={24} />
             </Link>
             <button className="icon-button" type="button" aria-label="메뉴 열기">
-              <Image src="/figma-assets/service-menu.svg" alt="" width={24} height={24} />
+              <Image src="/service/service-menu.svg" alt="" width={24} height={24} />
             </button>
           </div>
         </header>
@@ -65,7 +66,12 @@ export default function ServicePage() {
         <div className="service-content">
           <section className="service-hero-grid" aria-label="주요 서비스">
             {heroServices.map((service) => (
-              <article className={`service-hero-card ${service.tone}`} key={service.title}>
+              <Link
+                href={service.href ?? "#"}
+                className={`service-hero-card ${service.tone}`}
+                key={service.title}
+                aria-label={`${service.title} 이동`}
+              >
                 <div className="service-hero-icon">
                   <Image src={service.icon} alt="" width={22} height={22} />
                 </div>
@@ -73,7 +79,7 @@ export default function ServicePage() {
                   <h2>{service.title}</h2>
                   <p>{service.description}</p>
                 </div>
-              </article>
+              </Link>
             ))}
           </section>
 
@@ -106,7 +112,7 @@ export default function ServicePage() {
               <h2 id="recommend-title">AI 추천 맞춤 사업 TOP3</h2>
               <Link href="/support-programs" className="recommend-view-all">
                 전체보기
-                <Image src="/figma-assets/service-chevron.svg" alt="" width={12} height={12} />
+                <Image src="/service/service-chevron.svg" alt="" width={12} height={12} />
               </Link>
             </div>
 
@@ -135,7 +141,7 @@ export default function ServicePage() {
                     </div>
                     <span className="recommend-chevron-link" aria-hidden="true">
                       <Image
-                        src="/figma-assets/service-chevron.svg"
+                        src="/service/service-chevron.svg"
                         alt=""
                         width={18}
                         height={18}
@@ -165,7 +171,7 @@ export default function ServicePage() {
           <section className="notification-banner" aria-label="알림 설정">
             <div className="notification-copy">
               <div className="notification-icon">
-                <Image src="/figma-assets/service-bell.svg" alt="" width={20} height={20} />
+                <Image src="/service/service-bell.svg" alt="" width={20} height={20} />
               </div>
               <div>
                 <h2>신청 마감 전에 알려드려요!</h2>
@@ -182,7 +188,7 @@ export default function ServicePage() {
 
         <div className="home-indicator" aria-hidden="true">
           <Image
-            src="/figma-assets/service-home-indicator.svg"
+            src="/service/service-home-indicator.svg"
             alt=""
             width={128}
             height={4}

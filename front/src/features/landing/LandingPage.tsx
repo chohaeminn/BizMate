@@ -3,19 +3,19 @@ import Link from "next/link";
 
 const trustBadges = [
   {
-    icon: "/figma-assets/shield.svg",
+    icon: "/landing/shield.svg",
     label: "KB 데이터 보안",
   },
   {
-    icon: "/figma-assets/bolt.svg",
+    icon: "/landing/bolt.svg",
     label: "초고속 AI 분석",
   },
 ];
 
 const features = [
   {
-    icon: "/figma-assets/tax.svg",
-    arrow: "/figma-assets/arrow-1.svg",
+    icon: "/landing/tax.svg",
+    arrow: "/landing/arrow-1.svg",
     tone: "yellow",
     title: "스마트 절세",
     description: [
@@ -26,8 +26,8 @@ const features = [
     action: "분석 도구 열기",
   },
   {
-    icon: "/figma-assets/loan.svg",
-    arrow: "/figma-assets/arrow-2.svg",
+    icon: "/landing/loan.svg",
+    arrow: "/landing/arrow-2.svg",
     tone: "gray",
     title: "내 사업장 자금 설계",
     description: [
@@ -38,8 +38,8 @@ const features = [
     action: "간편하게 자금 설계 하기",
   },
   {
-    icon: "/figma-assets/policy.svg",
-    arrow: "/figma-assets/arrow-2.svg",
+    icon: "/landing/policy.svg",
+    arrow: "/landing/arrow-2.svg",
     tone: "brown",
     title: "내 사업장에 맞는 정책 자금 / 보조금",
     description: [
@@ -69,7 +69,7 @@ export default function LandingPage() {
         <header className="app-header">
           <h1>KB기업모바일브랜치</h1>
           <Image
-            src="/figma-assets/header-icons.svg"
+            src="/landing/header-icons.svg"
             alt=""
             width={123}
             height={24}
@@ -99,7 +99,7 @@ export default function LandingPage() {
 
             <div className="hero-image-wrap">
               <Image
-                src="/figma-assets/hero.png"
+                src="/landing/hero.png"
                 alt=""
                 width={704}
                 height={412}
@@ -111,9 +111,9 @@ export default function LandingPage() {
 
           <section className="social-proof" aria-label="이용자 현황">
             <div className="avatar-stack" aria-hidden="true">
-              <Image src="/figma-assets/avatar-1.png" alt="" width={40} height={40} />
-              <Image src="/figma-assets/avatar-2.png" alt="" width={40} height={40} />
-              <Image src="/figma-assets/avatar-3.png" alt="" width={40} height={40} />
+              <Image src="/landing/avatar-1.png" alt="" width={40} height={40} />
+              <Image src="/landing/avatar-2.png" alt="" width={40} height={40} />
+              <Image src="/landing/avatar-3.png" alt="" width={40} height={40} />
               <span>+2k</span>
             </div>
             <p>
@@ -181,7 +181,7 @@ export default function LandingPage() {
 
         <div className="sticky-cta">
           <Link href="/service" aria-label="내 자금관리 분석 시작하기">
-            <Image src="/figma-assets/cta.svg" alt="" width={18} height={18} />
+            <Image src="/landing/cta.svg" alt="" width={18} height={18} />
             <span>내 자금관리 분석 시작하기</span>
           </Link>
         </div>

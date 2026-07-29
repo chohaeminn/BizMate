@@ -2,12 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 const steps = [
-  { label: "본인 인증", icon: "/figma-assets/complete-step-user.svg", done: true },
-  { label: "사업자 인\n증", icon: "/figma-assets/complete-step-business.svg", done: true },
-  { label: "신청정보\n입력", icon: "/figma-assets/complete-step-form.svg", done: true },
-  { label: "자동 서류\n제출", icon: "/figma-assets/complete-step-upload.svg", active: true },
-  { label: "심사", icon: "/figma-assets/complete-step-review.svg" },
-  { label: "대출 실행", icon: "/figma-assets/complete-step-loan.svg" },
+  { label: "본인 인증", icon: "/apply-complete/complete-step-user.svg", done: true },
+  { label: "사업자 인\n증", icon: "/apply-complete/complete-step-business.svg", done: true },
+  { label: "신청정보\n입력", icon: "/apply-complete/complete-step-form.svg", done: true },
+  { label: "자동 서류\n제출", icon: "/apply-complete/complete-step-upload.svg", active: true },
+  { label: "심사", icon: "/apply-complete/complete-step-review.svg" },
+  { label: "대출 실행", icon: "/apply-complete/complete-step-loan.svg" },
 ];
 
 const processItems = [
@@ -39,19 +39,19 @@ export default function SupportProgramApplyCompletePage() {
         <header className="complete-header">
           <div className="complete-header-left">
             <Link href="/support-programs/apply" className="icon-button" aria-label="이전 화면으로 이동">
-              <Image src="/figma-assets/complete-back.svg" alt="" width={24} height={24} />
+              <Image src="/apply-complete/complete-back.svg" alt="" width={24} height={24} />
             </Link>
             <h1>KB BizMate AI</h1>
           </div>
           <div className="complete-header-actions">
             <button className="icon-button" type="button" aria-label="검색">
-              <Image src="/figma-assets/complete-search.svg" alt="" width={24} height={24} />
+              <Image src="/apply-complete/complete-search.svg" alt="" width={24} height={24} />
             </button>
             <Link href="/" className="icon-button" aria-label="홈으로 이동">
-              <Image src="/figma-assets/complete-home.svg" alt="" width={24} height={24} />
+              <Image src="/apply-complete/complete-home.svg" alt="" width={24} height={24} />
             </Link>
             <button className="icon-button" type="button" aria-label="메뉴 열기">
-              <Image src="/figma-assets/complete-menu.svg" alt="" width={24} height={24} />
+              <Image src="/apply-complete/complete-menu.svg" alt="" width={24} height={24} />
             </button>
           </div>
         </header>
@@ -60,7 +60,7 @@ export default function SupportProgramApplyCompletePage() {
           <section className="complete-banner" aria-labelledby="complete-title">
             <div className="complete-title-row">
               <span>
-                <Image src="/figma-assets/complete-check.svg" alt="" width={16} height={16} />
+                <Image src="/apply-complete/complete-check.svg" alt="" width={16} height={16} />
               </span>
               <h2 id="complete-title">
                 신청이 <strong>완료</strong>되었습니다.
@@ -87,7 +87,7 @@ export default function SupportProgramApplyCompletePage() {
                   </div>
                   <span className="complete-step-state">
                     {step.done ? (
-                      <Image src="/figma-assets/complete-step-done.svg" alt="" width={12} height={12} />
+                      <Image src="/apply-complete/complete-step-done.svg" alt="" width={12} height={12} />
                     ) : (
                       index + 1
                     )}
@@ -140,7 +140,7 @@ export default function SupportProgramApplyCompletePage() {
         <div className="complete-bottom-cta">
           <Link href="/support-programs/apply/status" className="complete-status-button">
             신청현황 보기
-            <Image src="/figma-assets/complete-arrow.svg" alt="" width={20} height={20} />
+            <Image src="/apply-complete/complete-arrow.svg" alt="" width={20} height={20} />
           </Link>
         </div>
       </div>

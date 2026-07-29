@@ -2,20 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 
 const steps = [
-  { label: "본인 인증", icon: "/figma-assets/apply-step-user.svg" },
-  { label: "사업자\n인증", icon: "/figma-assets/apply-step-business.svg" },
-  { label: "신청정보\n입력", icon: "/figma-assets/apply-step-form.svg" },
-  { label: "자동 서류\n제출", icon: "/figma-assets/apply-step-upload.svg", active: true },
-  { label: "심사", icon: "/figma-assets/apply-step-review.svg" },
-  { label: "대출 실행", icon: "/figma-assets/apply-step-loan.svg" },
+  { label: "본인 인증", icon: "/apply/apply-step-user.svg" },
+  { label: "사업자\n인증", icon: "/apply/apply-step-business.svg" },
+  { label: "신청정보\n입력", icon: "/apply/apply-step-form.svg" },
+  { label: "자동 서류\n제출", icon: "/apply/apply-step-upload.svg", active: true },
+  { label: "심사", icon: "/apply/apply-step-review.svg" },
+  { label: "대출 실행", icon: "/apply/apply-step-loan.svg" },
 ];
 
 const documents = [
-  { label: "사업자등록증", icon: "/figma-assets/apply-doc-business.svg" },
-  { label: "신분증", icon: "/figma-assets/apply-doc-id.svg" },
-  { label: "매출 관련 자료", icon: "/figma-assets/apply-doc-business.svg" },
-  { label: "국세 납세증명", icon: "/figma-assets/apply-doc-tax.svg" },
-  { label: "지방세 납세증명", icon: "/figma-assets/apply-doc-tax.svg" },
+  { label: "사업자등록증", icon: "/apply/apply-doc-business.svg" },
+  { label: "신분증", icon: "/apply/apply-doc-id.svg" },
+  { label: "매출 관련 자료", icon: "/apply/apply-doc-business.svg" },
+  { label: "국세 납세증명", icon: "/apply/apply-doc-tax.svg" },
+  { label: "지방세 납세증명", icon: "/apply/apply-doc-tax.svg" },
 ];
 
 const notices = [
@@ -31,19 +31,19 @@ export default function SupportProgramApplyPage() {
         <header className="apply-header">
           <div className="apply-header-left">
             <Link href="/support-programs" className="icon-button" aria-label="이전 화면으로 이동">
-              <Image src="/figma-assets/apply-back.svg" alt="" width={24} height={24} />
+              <Image src="/apply/apply-back.svg" alt="" width={24} height={24} />
             </Link>
             <h1>KB BizMate AI</h1>
           </div>
           <div className="apply-header-actions">
             <button className="icon-button" type="button" aria-label="검색">
-              <Image src="/figma-assets/apply-search.svg" alt="" width={24} height={24} />
+              <Image src="/apply/apply-search.svg" alt="" width={24} height={24} />
             </button>
             <Link href="/" className="icon-button" aria-label="홈으로 이동">
-              <Image src="/figma-assets/apply-home.svg" alt="" width={24} height={24} />
+              <Image src="/apply/apply-home.svg" alt="" width={24} height={24} />
             </Link>
             <button className="icon-button" type="button" aria-label="메뉴 열기">
-              <Image src="/figma-assets/apply-menu.svg" alt="" width={24} height={24} />
+              <Image src="/apply/apply-menu.svg" alt="" width={24} height={24} />
             </button>
           </div>
         </header>
@@ -95,13 +95,13 @@ export default function SupportProgramApplyPage() {
                     </div>
                     <span className="auto-submit-badge">
                       자동 제출
-                      <Image src="/figma-assets/apply-check.svg" alt="" width={6} height={6} />
+                      <Image src="/apply/apply-check.svg" alt="" width={6} height={6} />
                     </span>
                   </div>
                 ))}
               </div>
               <div className="apply-doc-info">
-                <Image src="/figma-assets/apply-lock.svg" alt="" width={16} height={16} />
+                <Image src="/apply/apply-lock.svg" alt="" width={16} height={16} />
                 <p>KB 금융 데이터를 바탕으로 안전하게 자동 제출됩니다.</p>
               </div>
             </div>
@@ -112,7 +112,7 @@ export default function SupportProgramApplyPage() {
             <div className="apply-notice-card">
               {notices.map((notice) => (
                 <div className="apply-notice-row" key={notice}>
-                  <Image src="/figma-assets/apply-notice-check.svg" alt="" width={16} height={16} />
+                  <Image src="/apply/apply-notice-check.svg" alt="" width={16} height={16} />
                   <p>{notice}</p>
                 </div>
               ))}
@@ -123,7 +123,7 @@ export default function SupportProgramApplyPage() {
         <div className="apply-bottom-cta">
           <Link href="/support-programs/apply/complete" aria-label="KB스타뱅킹에서 비대면 신청하기">
             비대면 신청하기
-            <Image src="/figma-assets/apply-arrow.svg" alt="" width={20} height={20} />
+            <Image src="/apply/apply-arrow.svg" alt="" width={20} height={20} />
           </Link>
         </div>
       </div>

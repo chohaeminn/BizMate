@@ -1,0 +1,235 @@
+.consult-complete-screen {
+  background: #f8f9fa;
+  padding-bottom: 110px;
+}
+
+.consult-complete-header {
+  align-items: center;
+  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid var(--line-light);
+  display: flex;
+  height: 64px;
+  justify-content: space-between;
+  padding: 1px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 4;
+}
+
+.consult-complete-header-left,
+.consult-complete-header-actions {
+  align-items: center;
+  display: flex;
+}
+
+.consult-complete-header-left {
+  gap: 16px;
+  min-width: 0;
+}
+
+.consult-complete-header-actions {
+  gap: 12px;
+}
+
+.consult-complete-header h1 {
+  color: #333;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 28px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.consult-complete-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 20px 24px 32px;
+}
+
+.consult-complete-hero {
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+}
+
+.consult-complete-characters {
+  aspect-ratio: 176 / 103;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.consult-complete-characters img {
+  height: 145%;
+  left: -13.5%;
+  max-width: none;
+  object-fit: cover;
+  position: absolute;
+  top: -22.3%;
+  width: 127%;
+}
+
+.consult-complete-hero h2 {
+  color: #262626;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 36px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.consult-complete-hero p {
+  color: #5f5e5e;
+  font-size: 12px;
+  line-height: 24.38px;
+  margin: 0;
+}
+
+.consult-complete-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.consult-complete-detail-card {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e7e8e9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  gap: 16px;
+  padding: 21px;
+}
+
+.consult-complete-detail-icon {
+  align-items: center;
+  background: #f8f8f8;
+  border-radius: 8px;
+  display: flex;
+  flex: 0 0 40px;
+  height: 40px;
+  justify-content: center;
+  overflow: hidden;
+  width: 40px;
+}
+
+.consult-complete-detail-icon img {
+  height: 100%;
+  width: 100%;
+}
+
+.consult-complete-detail-card div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.consult-complete-detail-card p {
+  color: #5f5e5e;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 19.5px;
+  margin: 0;
+}
+
+.consult-complete-detail-card strong {
+  color: #262626;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 25.5px;
+  white-space: nowrap;
+}
+
+.consult-complete-notice {
+  align-items: flex-start;
+  background: #f2f2f2;
+  border: 1px solid #e7e8e9;
+  border-radius: 8px;
+  display: flex;
+  gap: 8px;
+  padding: 13px 17px;
+}
+
+.consult-complete-notice img {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.consult-complete-notice p {
+  color: #5f5e5e;
+  font-size: 13px;
+  line-height: 19.5px;
+  margin: 0;
+}
+
+.consult-complete-bottom-cta {
+  background: #fff;
+  border-top: 1px solid #e7e8e9;
+  bottom: 0;
+  left: 50%;
+  padding: 21px 24px 20px;
+  position: fixed;
+  transform: translateX(-50%);
+  width: min(100%, var(--screen-max));
+  z-index: 5;
+}
+
+.consult-complete-bottom-cta a {
+  align-items: center;
+  background: var(--kb-yellow);
+  border-radius: 8px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  color: #262626;
+  display: flex;
+  font-size: 17px;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 25.5px;
+  min-height: 58px;
+  width: 100%;
+}
+
+@media (max-width: 359px) {
+  .consult-complete-header {
+    height: 56px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .consult-complete-header-left,
+  .consult-complete-header-actions {
+    gap: 8px;
+  }
+
+  .consult-complete-header h1 {
+    font-size: 16px;
+  }
+
+  .consult-complete-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .consult-complete-hero {
+    padding: 28px 20px;
+  }
+
+  .consult-complete-hero h2 {
+    font-size: 18px;
+  }
+
+  .consult-complete-detail-card strong {
+    font-size: 15px;
+  }
+}

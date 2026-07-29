@@ -1,0 +1,349 @@
+.consult-screen {
+  background: #f8f9fa;
+  padding-bottom: 154px;
+}
+
+.consult-header {
+  align-items: center;
+  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid var(--line-light);
+  display: flex;
+  height: 64px;
+  padding: 1px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 4;
+}
+
+.consult-header-left {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  min-width: 0;
+}
+
+.consult-header h1 {
+  color: #333;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 28px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.consult-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 39px var(--side-gutter) 32px;
+}
+
+.consult-intro {
+  align-items: flex-end;
+  display: flex;
+  width: 100%;
+}
+
+.consult-character {
+  align-items: flex-end;
+  background: #edeeef;
+  border-radius: 9999px;
+  display: flex;
+  flex: 0 0 68px;
+  height: 66px;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.consult-character img {
+  height: 70px;
+  object-fit: contain;
+  transform: translateY(4px);
+  width: 73px;
+}
+
+.consult-speech {
+  flex: 1 1 auto;
+  padding-left: 12px;
+  position: relative;
+}
+
+.consult-speech::before,
+.consult-speech::after {
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #e1e3e4;
+  border-top: 10px solid transparent;
+  bottom: 13px;
+  content: "";
+  height: 0;
+  left: 4px;
+  position: absolute;
+  width: 0;
+}
+
+.consult-speech::after {
+  border-right-color: #fff;
+  left: 5px;
+}
+
+.consult-speech p {
+  background: #fff;
+  border: 1px solid #e1e3e4;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  color: #262626;
+  font-size: 16px;
+  line-height: 22px;
+  margin: 0;
+  padding: 16px 20px;
+}
+
+.consult-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.consult-title-row {
+  align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+}
+
+.consult-section h2,
+.consult-title-row h2 {
+  color: #262626;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  margin: 0;
+}
+
+.consult-title-row span {
+  color: #5f5e5e;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.consult-calendar {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  padding: 20px;
+}
+
+.consult-calendar span,
+.consult-calendar button {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: #262626;
+  display: flex;
+  font-size: 14px;
+  height: 44px;
+  justify-content: center;
+  line-height: 20px;
+  padding: 0;
+  text-align: center;
+}
+
+.consult-calendar .calendar-blank {
+  height: 44px;
+}
+
+.consult-calendar span {
+  color: #5f5e5e;
+  font-size: 12px;
+  font-weight: 500;
+  height: 32px;
+  line-height: 16px;
+}
+
+.consult-calendar .sunday {
+  color: #e02020;
+}
+
+.consult-calendar button {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.consult-calendar button.disabled {
+  color: #c8c6c5;
+}
+
+.consult-calendar button.selected {
+  background: var(--kb-yellow);
+  color: #191c1d;
+  font-weight: 700;
+}
+
+.consult-time-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.consult-time-grid button {
+  align-items: center;
+  appearance: none;
+  background: #fff;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  height: 92px;
+  justify-content: center;
+  padding: 22px 8px;
+}
+
+.consult-time-grid strong {
+  color: #000;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.consult-time-grid span {
+  color: #2d8a39;
+  font-size: 12px;
+  line-height: 16px;
+  padding-top: 4px;
+}
+
+.consult-time-grid button.disabled {
+  background: #f3f4f5;
+  opacity: 0.5;
+}
+
+.consult-time-grid button.disabled span {
+  color: #5f5e5e;
+}
+
+.consult-time-grid button.selected {
+  background: #fff9e6;
+  border-color: var(--kb-yellow);
+  box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
+}
+
+.consult-time-grid button.selected strong {
+  color: #191c1d;
+}
+
+.consult-time-grid button.selected span {
+  color: #745b00;
+  font-weight: 700;
+}
+
+.consult-info-box {
+  align-items: flex-start;
+  background: #f3f4f5;
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+}
+
+.consult-info-box img {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.consult-info-box p {
+  color: #4e4632;
+  font-size: 14px;
+  line-height: 22.75px;
+  margin: 0;
+}
+
+.consult-info-box strong {
+  font-weight: 700;
+}
+
+.consult-bottom-cta {
+  background: #fff;
+  border-top: 1px solid #e7e8e9;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  left: 50%;
+  padding: 16px var(--side-gutter);
+  position: fixed;
+  transform: translateX(-50%);
+  width: min(100%, var(--screen-max));
+  z-index: 5;
+}
+
+.consult-reserve-button,
+.consult-later-button {
+  align-items: center;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.consult-reserve-button {
+  appearance: none;
+  background: var(--kb-yellow);
+  border: 0;
+  color: #262626;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
+  min-height: 60px;
+}
+
+.consult-reserve-button:disabled {
+  background: #e7e8e9;
+  color: #9ca3af;
+}
+
+.consult-later-button {
+  color: #5f5e5e;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  min-height: 36px;
+}
+
+@media (max-width: 359px) {
+  .consult-header {
+    height: 56px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .consult-header-left {
+    gap: 8px;
+  }
+
+  .consult-header h1 {
+    font-size: 15px;
+  }
+
+  .consult-content {
+    gap: 28px;
+  }
+
+  .consult-speech p {
+    font-size: 14px;
+    padding: 14px 16px;
+  }
+
+  .consult-calendar {
+    padding: 16px 12px;
+  }
+}

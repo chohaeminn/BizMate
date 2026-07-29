@@ -112,11 +112,8 @@ class SupportProgramCreate(BaseModel):
     )
 
     application_start_date: date | None = None
-
     application_end_date: date | None = None
-
     description: str | None = None
-
     source_url: str | None = None
 
 
@@ -154,11 +151,8 @@ class SupportProgramUpdate(BaseModel):
     )
 
     application_start_date: date | None = None
-
     application_end_date: date | None = None
-
     description: str | None = None
-
     source_url: str | None = None
 
 
@@ -178,13 +172,122 @@ class SupportProgramResponse(BaseModel):
     source_url: str | None
     created_at: datetime
 
-    # =====================================================
+
+# =====================================================
 # Recommendation
 # =====================================================
 
 class RecommendationResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
     score: int
     reason: str
     program: SupportProgramResponse
+
+
+# =====================================================
+# Funding Request
+# =====================================================
+
+class FundingRequestCreate(BaseModel):
+    profile_id: uuid.UUID
+
+    required_amount: int = Field(
+        gt=0,
+    )
+
+    funding_purpose: str = Field(
+        min_length=1,
+        max_length=50,
+    )
+
+    self_funding_amount: int = Field(
+        default=0,
+        ge=0,
+    )
+
+    max_monthly_payment: int = Field(
+        default=0,
+        ge=0,
+    )
+
+    optimization_priority: str = Field(
+        default="비용",
+        min_length=1,
+        max_length=30,
+    )
+
+
+class FundingRequestUpdate(BaseModel):
+    required_amount: int | None = Field(
+        default=None,
+        gt=0,
+    )
+
+    funding_purpose: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=50,
+    )
+
+    self_funding_amount: int | None = Field(
+        default=None,
+        ge=0,
+    )
+
+    max_monthly_payment: int | None = Field(
+        default=None,
+        ge=0,
+    )
+
+    optimization_priority: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=30,
+    )
+
+
+class FundingRequestResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    profile_id: uuid.UUID
+    required_amount: int
+    funding_purpose: str
+    self_funding_amount: int
+    max_monthly_payment: int
+    optimization_priority: str
+    created_at: datetime
+
+
+# =====================================================
+# Portfolio
+# =====================================================
+
+class PortfolioItemResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    portfolio_result_id: uuid.UUID
+    support_program_id: uuid.UUID | None
+    item_name: str
+    funding_type: str
+    amount: int
+    reason: str | None
+    priority_order: int
+    created_at: datetime
+
+
+class PortfolioResultResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    funding_request_id: uuid.UUID
+    total_required_amount: int
+    total_funding_amount: int
+    shortage_amount: int
+    summary: str | None
+    created_at: datetime
+
+
+class PortfolioGenerateResponse(BaseModel):
+    portfolio: PortfolioResultResponse
+    items: list[PortfolioItemResponse]

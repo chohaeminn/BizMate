@@ -1,10 +1,17 @@
 from fastapi import FastAPI
 from sqlalchemy import text
+from app.routers.portfolios import router as portfolios_router
 
-from app.database import engine
+from app import models
+from app.database import Base, engine
+from app.routers import funding_requests
 from app.routers.profiles import router as profiles_router
-from app.routers.support_programs import router as support_programs_router
 from app.routers.recommendations import router as recommendations_router
+from app.routers.support_programs import router as support_programs_router
+
+
+# models.py에 정의된 테이블 중 DB에 없는 테이블을 생성
+Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI(
@@ -17,6 +24,8 @@ app = FastAPI(
 app.include_router(profiles_router)
 app.include_router(support_programs_router)
 app.include_router(recommendations_router)
+app.include_router(funding_requests.router)
+app.include_router(portfolios_router)
 
 
 @app.get("/")

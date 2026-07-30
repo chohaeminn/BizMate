@@ -8,6 +8,7 @@ const heroServices = [
     description: "맞춤형 자금 계획 수립",
     icon: "/service/service-portfolio.svg",
     tone: "blue",
+    href: "/portfolio",
   },
   {
     title: "세금 절세 서비스",

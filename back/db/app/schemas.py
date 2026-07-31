@@ -6,6 +6,22 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 # =====================================================
+# AI
+# =====================================================
+
+class AIInvokeRequest(BaseModel):
+    content: str | None = Field(
+        default=None,
+        min_length=1,
+    )
+
+
+class AIInvokeResponse(BaseModel):
+    agent: str
+    output: str
+
+
+# =====================================================
 # Business Profile
 # =====================================================
 

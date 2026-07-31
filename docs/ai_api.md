@@ -136,10 +136,11 @@ curl -X POST "http://localhost:8000/ai/funding-portfolio" \
   -d '{"content":"운영자금 5천만원을 조달하기 위한 포트폴리오를 만들어줘."}'
 ```
 
-## 6. `ai/test.py`로 직접 호출
+## 6. `ai/test.py`로 POST 호출
 
-HTTP 서버를 거치지 않고 Python에서 각 에이전트의 연결 상태를 확인할
-수 있습니다. 아래 명령은 프로젝트 루트에서 실행합니다.
+실행 중인 FastAPI 서버에 `POST` 요청을 보내 각 엔드포인트와 에이전트의
+연결 상태를 확인할 수 있습니다. 백엔드를 먼저 실행한 후 아래 명령을
+프로젝트 루트에서 실행합니다.
 
 ```bash
 python ai/test.py tax
@@ -160,9 +161,18 @@ python ai/test.py portfolio \
 python ai/test.py all
 ```
 
-`test.py`는 기본 예시 프롬프트를 전달합니다. 지원사업 AI가 DB의 최신
-데이터를 자동으로 사용하게 하려면 Python 코드에서
-`call_support_agent()`를 인자 없이 호출합니다.
+다른 주소에서 백엔드를 실행한 경우 `--base-url`을 지정합니다.
+
+```bash
+python ai/test.py tax --base-url http://localhost:8080
+```
+
+HTTP API를 거치지 않고 기존 Python 호출 함수를 직접 시험하려면
+`--direct` 옵션을 사용합니다.
+
+```bash
+python ai/test.py tax --direct
+```
 
 ## 7. 주요 코드 위치
 

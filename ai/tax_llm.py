@@ -1,25 +1,23 @@
-# Before running the sample:
-#    pip install azure-ai-projects>=2.1.0
+import os
 
-from azure.identity import DefaultAzureCredential
-from azure.ai.projects import AIProjectClient
+from ai.azure_client import invoke_agent
 
-endpoint = "https://jihyeonhwang-0999-resource.services.ai.azure.com/api/projects/jihyeonhwang-0999"
 
-project_client = AIProjectClient(
-    endpoint=endpoint,
-    credential=DefaultAzureCredential(),
-)
+def call_tax_agent(content: str) -> str:
+    """절세 AI 에이전트를 호출한다."""
+    return invoke_agent(
+        agent_name=os.getenv(
+            "AZURE_TAX_AGENT_NAME",
+            "tax-saving-ai",
+        ),
+        agent_version=os.getenv(
+            "AZURE_TAX_AGENT_VERSION",
+            "3",
+        ),
+        content=content,
+    )
 
-my_agent = "tax-saving-ai"
-my_version = "3"
 
-openai_client = project_client.get_openai_client()
-
-# Reference the agent to get a response
-response = openai_client.responses.create(
-    input=[{"role": "user", "content": "Tell me what you can help with."}],
-    extra_body={"agent_reference": {"name": my_agent, "version": my_version, "type": "agent_reference"}},
-)
-
-print(f"Response output: {response.output_text}")
+if __name__ == "__main__":
+    result = call_tax_agent("절세 AI가 제공할 수 있는 기능을 알려줘.")
+    print(f"Response output: {result}")

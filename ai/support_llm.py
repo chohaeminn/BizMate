@@ -1,21 +1,24 @@
 import json
+import os
 import sys
 from pathlib import Path
 
-from azure.identity import DefaultAzureCredential
-from azure.ai.projects import AIProjectClient
-from sqlalchemy import select
+from ai.azure_client import invoke_agent
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[1] / "back" / "db"
-sys.path.insert(0, str(BACKEND_DIR))
-
-from app.database import SessionLocal
-from app.models import BusinessProfile, SupportProgram
 
 
 def create_llm_content() -> str:
     """DB 데이터를 지원사업 추천 에이전트 입력용 JSON으로 변환한다."""
+    if str(BACKEND_DIR) not in sys.path:
+        sys.path.insert(0, str(BACKEND_DIR))
+
+    from sqlalchemy import select
+
+    from app.database import SessionLocal
+    from app.models import BusinessProfile, SupportProgram
+
     with SessionLocal() as db:
         business_profile = db.scalar(
             select(BusinessProfile)
@@ -64,36 +67,21 @@ def create_llm_content() -> str:
         return json.dumps(payload, ensure_ascii=False)
 
 
-def main() -> None:
-    endpoint = (
-        "https://jihyeonhwang-0999-resource.services.ai.azure.com"
-        "/api/projects/jihyeonhwang-0999"
+def call_support_agent(content: str | None = None) -> str:
+    """지원사업 추천 AI를 호출한다. 입력이 없으면 최신 DB 데이터를 사용한다."""
+    return invoke_agent(
+        agent_name=os.getenv(
+            "AZURE_SUPPORT_AGENT_NAME",
+            "support-program-ai",
+        ),
+        agent_version=os.getenv(
+            "AZURE_SUPPORT_AGENT_VERSION",
+            "2",
+        ),
+        content=content or create_llm_content(),
     )
-
-    project_client = AIProjectClient(
-        endpoint=endpoint,
-        credential=DefaultAzureCredential(),
-    )
-    openai_client = project_client.get_openai_client()
-
-    response = openai_client.responses.create(
-        input=[
-            {
-                "role": "user",
-                "content": create_llm_content(),
-            }
-        ],
-        extra_body={
-            "agent_reference": {
-                "name": "support-program-ai",
-                "version": "2",
-                "type": "agent_reference",
-            }
-        },
-    )
-
-    print(f"Response output: {response.output_text}")
 
 
 if __name__ == "__main__":
-    main()
+    result = call_support_agent()
+    print(f"Response output: {result}")

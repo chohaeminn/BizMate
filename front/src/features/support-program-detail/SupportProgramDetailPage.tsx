@@ -2,15 +2,12 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { SupportProgram } from "@/data/supportPrograms";
-import { getSupportProgramBySlug } from "@/data/supportPrograms";
 
 type SupportProgramDetailPageProps = {
-  program?: SupportProgram;
+  program: SupportProgram;
 };
 
-export default function SupportProgramDetailPage({
-  program = getSupportProgramBySlug("daegu-special-guarantee")!,
-}: SupportProgramDetailPageProps) {
+export default function SupportProgramDetailPage({ program }: SupportProgramDetailPageProps) {
   const [isInterested, setIsInterested] = useState(false);
   const [showInterestModal, setShowInterestModal] = useState(false);
 

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { topRecommendedPrograms } from "@/data/supportPrograms";
+import type { BusinessProfile, SupportProgram } from "@/data/supportPrograms";
 
 const heroServices = [
   {
@@ -19,14 +19,7 @@ const heroServices = [
   },
 ];
 
-const statusItems = [
-  {
-    label: "추천사업",
-    value: "7",
-    unit: "개",
-    icon: "/service/service-recommend.svg",
-    tone: "green",
-  },
+const baseStatusItems = [
   {
     label: "신청마감 임박",
     value: "2",
@@ -43,7 +36,24 @@ const statusItems = [
   },
 ];
 
-export default function ServicePage() {
+type ServicePageProps = {
+  programs: SupportProgram[];
+  profile: BusinessProfile | null;
+  recommendationSummary: string | null;
+};
+
+export default function ServicePage({ programs, profile, recommendationSummary }: ServicePageProps) {
+  const topRecommendedPrograms = programs.slice(0, 3);
+  const statusItems = [
+    {
+      label: "추천사업",
+      value: String(programs.length),
+      unit: "개",
+      icon: "/service/service-recommend.svg",
+      tone: "green",
+    },
+    ...baseStatusItems,
+  ];
   return (
     <main className="landing">
       <div className="mobile-screen service-screen">
@@ -110,12 +120,18 @@ export default function ServicePage() {
 
           <section className="ai-recommendations" aria-labelledby="recommend-title">
             <div className="recommend-heading">
-              <h2 id="recommend-title">AI 추천 맞춤 사업 TOP3</h2>
+              <h2 id="recommend-title">
+                {profile ? `${profile.business_name} 맞춤 지원사업` : "AI 추천 맞춤 지원사업"}
+              </h2>
               <Link href="/support-programs" className="recommend-view-all">
                 전체보기
                 <Image src="/service/service-chevron.svg" alt="" width={12} height={12} />
               </Link>
             </div>
+
+            {recommendationSummary ? (
+              <p className="recommendation-summary">{recommendationSummary}</p>
+            ) : null}
 
             <div className="recommend-card-list">
               {topRecommendedPrograms.map((recommendation) => (

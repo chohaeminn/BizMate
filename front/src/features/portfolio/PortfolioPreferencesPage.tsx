@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { loadPortfolioFlowInput, savePortfolioFlowInput } from "@/lib/portfolioSession";
+import { clearPortfolioResultCache, loadPortfolioFlowInput, savePortfolioFlowInput } from "@/lib/portfolioSession";
 import type { PortfolioContext } from "@/lib/portfolioApi";
 
 const fundingOptions: Array<{
@@ -179,7 +179,10 @@ export default function PortfolioPreferencesPage({ context }: { context: Portfol
           <Link
             href="/portfolio/analysis"
             className="portfolio-analysis-button"
-            onClick={() => savePortfolioFlowInput({ preference: selectedFunding })}
+            onClick={() => {
+              savePortfolioFlowInput({ preference: selectedFunding });
+              clearPortfolioResultCache();
+            }}
           >
             분석 시작
           </Link>

@@ -9,7 +9,7 @@ const trustBadges = [
   },
   {
     icon: "/landing/bolt.svg",
-    label: "초고속 AI 분석",
+    label: "맞춤형 AI 분석",
   },
 ];
 

@@ -32,3 +32,13 @@ export function savePortfolioFlowInput(update: Partial<PortfolioFlowInput>) {
   const current = loadPortfolioFlowInput();
   window.sessionStorage.setItem(storageKey, JSON.stringify({ ...current, ...update }));
 }
+
+export function clearPortfolioResultCache() {
+  if (typeof window === "undefined") return;
+  for (let index = window.sessionStorage.length - 1; index >= 0; index -= 1) {
+    const key = window.sessionStorage.key(index);
+    if (key?.startsWith("bizmate-portfolio-result-")) {
+      window.sessionStorage.removeItem(key);
+    }
+  }
+}

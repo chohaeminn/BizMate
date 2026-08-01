@@ -8,7 +8,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import (
     BusinessProfile,
+    ExternalDebt,
     FundingRequest,
+    LoanProduct,
     PortfolioItem,
     PortfolioResult,
     SupportProgram,
@@ -29,6 +31,46 @@ router = APIRouter(
     prefix="/portfolios",
     tags=["Portfolios"],
 )
+
+
+@router.get("/context/{profile_id}")
+def get_portfolio_context(
+    profile_id: uuid.UUID,
+    db: Session = Depends(get_db),
+):
+    """포트폴리오 AI와 입력 화면에 필요한 DB 컨텍스트를 조회합니다."""
+    profile = db.get(BusinessProfile, profile_id)
+    if profile is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="사업자 프로필을 찾을 수 없습니다.",
+        )
+
+    debts = db.scalars(
+        select(ExternalDebt)
+        .where(ExternalDebt.profile_id == profile_id)
+        .order_by(ExternalDebt.created_at.desc())
+    ).all()
+    loan_products = db.scalars(
+        select(LoanProduct).order_by(LoanProduct.created_at.desc())
+    ).all()
+    support_programs = db.scalars(
+        select(SupportProgram).order_by(SupportProgram.created_at.desc())
+    ).all()
+    funding_request = db.scalar(
+        select(FundingRequest)
+        .where(FundingRequest.profile_id == profile_id)
+        .order_by(FundingRequest.created_at.desc())
+        .limit(1)
+    )
+
+    return {
+        "profile": profile,
+        "external_debts": debts,
+        "loan_products": loan_products,
+        "support_programs": support_programs,
+        "funding_request": funding_request,
+    }
 
 
 def normalize_text(value: str | None) -> str:

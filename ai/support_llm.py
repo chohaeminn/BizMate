@@ -59,7 +59,7 @@ def create_llm_content() -> str:
                 for program in support_programs
             ],
             "user_context": {
-                "current_page": "/service",
+                "current_page": "/support",
                 "intent": "recommend_support_programs",
             },
         }
@@ -76,7 +76,7 @@ def call_support_agent(content: str | None = None) -> str:
         ),
         agent_version=os.getenv(
             "AZURE_SUPPORT_AGENT_VERSION",
-            "2",
+            "3",
         ),
         content=content or create_llm_content(),
     )

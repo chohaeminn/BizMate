@@ -23,6 +23,8 @@ function PortfolioDonut({ segments }: { segments: PortfolioSegment[] }) {
 export default function PortfolioResultPage() {
   const [options, setOptions] = useState(portfolioOptions);
   const [selectedSlug, setSelectedSlug] = useState(portfolioOptions[0].slug);
+  const [aiSummary, setAiSummary] = useState("비용, 속도, 월 부담을 기준으로 3가지를 제안해요");
+  const [disclaimer, setDisclaimer] = useState("AI 추천은 예상안이며 실제 승인 결과는 달라질 수 있습니다.");
 
   useEffect(() => {
     const input = loadPortfolioFlowInput();
@@ -30,10 +32,15 @@ export default function PortfolioResultPage() {
     const cached = window.sessionStorage.getItem(cacheKey);
 
     const applyOutput = (output: string) => {
-      const nextOptions = mergePortfolioLlmOutput(output);
-      if (!nextOptions.length) return;
-      setOptions(nextOptions);
-      setSelectedSlug(nextOptions.find((option) => option.badge)?.slug ?? nextOptions[0].slug);
+      const result = mergePortfolioLlmOutput(output);
+      if (!result.options.length) return;
+      setOptions(result.options);
+      setAiSummary(result.summary);
+      setDisclaimer(result.disclaimer);
+      const normalizedRecommendedType = result.recommendedType === "stable"
+        ? "burden"
+        : result.recommendedType;
+      setSelectedSlug(normalizedRecommendedType);
     };
 
     if (cached) {
@@ -75,7 +82,7 @@ export default function PortfolioResultPage() {
           <section className="portfolio-title-section portfolio-funded-title">
             <h2>내 상황에 맞추어 추천했어요</h2>
             <p>
-              비용, 속도, 월 부담을 기준으로 3가지를 제안해요
+              {aiSummary}
               <br />
               원하는 방식을 선택하고 신청 로드맵을 확인하세요
             </p>
@@ -108,6 +115,14 @@ export default function PortfolioResultPage() {
                       <h2>{option.title}</h2>
                     </div>
 
+                    {option.recommendationReason ? (
+                      <p className="portfolio-result-reason">{option.recommendationReason}</p>
+                    ) : null}
+
+                    <ul className="portfolio-result-points">
+                      {option.reasons.map((reason) => <li key={reason}>{reason}</li>)}
+                    </ul>
+
                     <div className="portfolio-result-body">
                       <PortfolioDonut segments={option.segments} />
                       <div className="portfolio-result-breakdown">
@@ -137,6 +152,8 @@ export default function PortfolioResultPage() {
               );
             })}
           </section>
+
+          <p className="portfolio-result-disclaimer">{disclaimer}</p>
         </div>
 
         <footer className="portfolio-footer portfolio-result-footer">

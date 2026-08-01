@@ -13,6 +13,15 @@ export type PortfolioOption = {
   metrics: Array<{ label: string; value: string }>;
   reasons: string[];
   stressWarning: string;
+  recommendationReason?: string;
+  riskNotes?: string[];
+};
+
+export type PortfolioLlmResult = {
+  recommendedType: string;
+  summary: string;
+  disclaimer: string;
+  options: PortfolioOption[];
 };
 
 export const portfolioOptions: PortfolioOption[] = [
@@ -103,14 +112,17 @@ export function getDonutBackground(segments: PortfolioSegment[]) {
   return `conic-gradient(${stops.join(", ")})`;
 }
 
-export function mergePortfolioLlmOutput(output: string): PortfolioOption[] {
+export function mergePortfolioLlmOutput(output: string): PortfolioLlmResult {
   const normalized = output.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
   const parsed = JSON.parse(normalized) as {
     recommended_type?: string;
+    summary?: string;
+    disclaimer?: string;
     options?: Array<{
       type: string;
       title?: string;
       recommendation_reasons?: string[];
+      decision_summary?: string;
       risk_notes?: string[];
     }>;
     portfolios?: Array<{
@@ -118,6 +130,7 @@ export function mergePortfolioLlmOutput(output: string): PortfolioOption[] {
       title?: string;
       is_ai_recommended?: boolean;
       recommendation_points?: string[];
+      recommendation_reason?: string;
       risk_notes?: string[];
       items?: Array<{
         name: string;
@@ -130,6 +143,8 @@ export function mergePortfolioLlmOutput(output: string): PortfolioOption[] {
     type: string;
     title?: string;
     recommendation_reasons?: string[];
+    recommendation_reason?: string;
+    decision_summary?: string;
     risk_notes?: string[];
     segments?: PortfolioSegment[];
     isAiRecommended?: boolean;
@@ -141,6 +156,7 @@ export function mergePortfolioLlmOutput(output: string): PortfolioOption[] {
     type: portfolio.type,
     title: portfolio.title,
     recommendation_reasons: portfolio.recommendation_points,
+    recommendation_reason: portfolio.recommendation_reason,
     risk_notes: portfolio.risk_notes,
     segments: portfolio.items?.map((item, index) => ({
       label: item.name,
@@ -153,8 +169,10 @@ export function mergePortfolioLlmOutput(output: string): PortfolioOption[] {
 
   if (!aiOptions?.length) throw new Error("portfolio_llm 응답에 포트폴리오가 없습니다.");
 
-  return aiOptions.flatMap((aiOption) => {
-    const normalizedType = aiOption.type === "stability" ? "burden" : aiOption.type;
+  const options = aiOptions.flatMap((aiOption) => {
+    const normalizedType = aiOption.type === "stability" || aiOption.type === "stable"
+      ? "burden"
+      : aiOption.type;
     const base = portfolioOptions.find((option) => option.slug === normalizedType);
     if (!base) return [];
     return [{
@@ -168,6 +186,19 @@ export function mergePortfolioLlmOutput(output: string): PortfolioOption[] {
         ? aiOption.recommendation_reasons
         : base.reasons,
       stressWarning: aiOption.risk_notes?.[0] || base.stressWarning,
+      recommendationReason: "recommendation_reason" in aiOption
+        ? aiOption.recommendation_reason
+        : "decision_summary" in aiOption
+          ? aiOption.decision_summary
+          : undefined,
+      riskNotes: aiOption.risk_notes,
     }];
   });
+
+  return {
+    recommendedType: parsed.recommended_type || options.find((option) => option.badge)?.slug || "cost",
+    summary: parsed.summary || "입력하신 사업정보와 자금 조달 선호를 바탕으로 포트폴리오를 추천했어요.",
+    disclaimer: parsed.disclaimer || "AI 추천은 입력 정보를 기반으로 한 예상안이며 실제 승인 결과는 달라질 수 있습니다.",
+    options,
+  };
 }

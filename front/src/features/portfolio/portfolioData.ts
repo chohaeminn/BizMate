@@ -1,0 +1,278 @@
+export type PortfolioSegment = {
+  label: string;
+  amount: string;
+  value: number;
+  color: string;
+};
+
+export type PortfolioOption = {
+  slug: string;
+  title: string;
+  badge?: string;
+  segments: PortfolioSegment[];
+  metrics: Array<{ label: string; value: string }>;
+  reasons: string[];
+  stressWarning: string;
+  recommendationReason?: string;
+  riskNotes?: string[];
+  roadmap?: Array<{ step: number; title: string; description: string }>;
+  requiredDocuments?: string[];
+};
+
+export type PortfolioLlmResult = {
+  recommendedType: string;
+  summary: string;
+  disclaimer: string;
+  options: PortfolioOption[];
+};
+
+export const portfolioOptions: PortfolioOption[] = [
+  {
+    slug: "cost",
+    title: "비용 최소형",
+    badge: "AI 추천",
+    segments: [
+      { label: "시설개선 지원금", amount: "1,000만 원", value: 1000, color: "#fc0" },
+      { label: "정책자금", amount: "2,000만 원", value: 2000, color: "#ffd700" },
+      { label: "보증부 대출", amount: "1,500만 원", value: 1500, color: "#a3a3a3" },
+      { label: "자기자금", amount: "500만 원", value: 500, color: "#e5e5e5" },
+    ],
+    metrics: [
+      { label: "월 상환액", value: "82만 원" },
+      { label: "금융비용", value: "198만 원" },
+      { label: "확보기간", value: "6주" },
+    ],
+    reasons: [
+      "지원금과 정책자금을 우선 활용해 대출원금을 줄였어요",
+      "신규 월 상환액을 권장 범위 90만 원 이내로 유지했어요",
+      "유사 사업자 대비 총부채 수준이 높아 일반 대출 비중을 낮췄어요",
+    ],
+    stressWarning: "매출이 20% 감소하면 상환 부담이 커질 수 있어요.",
+  },
+  {
+    slug: "fast",
+    title: "빠른 확보형",
+    segments: [
+      { label: "일반 사업자대출", amount: "2,500만 원", value: 2500, color: "#3b82f6" },
+      { label: "신속 정책자금", amount: "1,000만 원", value: 1000, color: "#60a5fa" },
+      { label: "한도 대출", amount: "1,000만 원", value: 1000, color: "#93c5fd" },
+      { label: "자기자금", amount: "500만 원", value: 500, color: "#dbeafe" },
+    ],
+    metrics: [
+      { label: "월 상환액", value: "108만 원" },
+      { label: "금융비용", value: "347만 원" },
+      { label: "확보기간", value: "2~3주" },
+    ],
+    reasons: [
+      "일반 사업자대출 비중을 높여 자금 확보 기간을 줄였어요",
+      "신속 정책자금을 함께 배치해 금융비용 상승을 완화했어요",
+      "긴급 운전자금이 필요한 상황에 맞춰 실행 가능성을 우선했어요",
+    ],
+    stressWarning: "매출이 10% 이상 감소하면 월 상환 여력이 빠르게 줄 수 있어요.",
+  },
+  {
+    slug: "burden",
+    title: "월 부담 최소형",
+    segments: [
+      { label: "장기 거치 정책자금", amount: "3,000만 원", value: 3000, color: "#22c55e" },
+      { label: "시설자금", amount: "1,000만 원", value: 1000, color: "#4ade80" },
+      { label: "보증서 대출", amount: "500만 원", value: 500, color: "#86efac" },
+      { label: "자기자금", amount: "500만 원", value: 500, color: "#dcfce7" },
+    ],
+    metrics: [
+      { label: "월 상환액", value: "65만 원" },
+      { label: "금융비용", value: "225만 원" },
+      { label: "확보기간", value: "7~8주" },
+    ],
+    reasons: [
+      "장기 거치 상품을 우선 배치해 초기 월 상환 부담을 낮췄어요",
+      "보증서 대출은 최소 금액만 활용해 고정비 증가를 제한했어요",
+      "자금 확보 속도보다 안정적인 현금흐름을 우선했어요",
+    ],
+    stressWarning: "확보기간이 길어져 신청 마감 일정 관리가 중요해요.",
+  },
+];
+
+export function getPortfolioOption(slug?: string | string[]) {
+  const value = Array.isArray(slug) ? slug[0] : slug;
+
+  return portfolioOptions.find((option) => option.slug === value) ?? portfolioOptions[0];
+}
+
+export function getDonutBackground(segments: PortfolioSegment[]) {
+  const total = segments.reduce((sum, segment) => sum + segment.value, 0);
+  let cursor = 0;
+
+  const stops = segments.map((segment) => {
+    const start = (cursor / total) * 100;
+    cursor += segment.value;
+    const end = (cursor / total) * 100;
+
+    return `${segment.color} ${start.toFixed(2)}% ${end.toFixed(2)}%`;
+  });
+
+  return `conic-gradient(${stops.join(", ")})`;
+}
+
+export function mergePortfolioLlmOutput(
+  output: string,
+  calculations: Array<{
+    type: string;
+    monthly_payment: number;
+    finance_cost: number;
+    expected_period_label: string;
+    items: Array<{
+      item_name: string;
+      funding_type: string;
+      amount: number;
+    }>;
+  }> = [],
+): PortfolioLlmResult {
+  const normalized = output.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+  const parsed = JSON.parse(normalized) as {
+    recommended_type?: string;
+    summary?: string;
+    disclaimer?: string;
+    options?: Array<{
+      type: string;
+      title?: string;
+      recommendation_reasons?: string[];
+      decision_summary?: string;
+      risk_notes?: string[];
+      roadmap?: Array<{ step: number; title: string; description: string }>;
+      required_documents?: string[];
+    }>;
+    portfolios?: Array<{
+      type: string;
+      title?: string;
+      is_ai_recommended?: boolean;
+      recommendation_points?: string[];
+      recommendation_reason?: string;
+      risk_notes?: string[];
+      roadmap?: Array<{ step: number; title: string; description: string }>;
+      required_documents?: string[];
+      items?: Array<{
+        name: string;
+        funding_type?: string;
+        allocated_amount: number;
+      }>;
+    }>;
+  };
+
+  type NormalizedOption = {
+    type: string;
+    title?: string;
+    recommendation_reasons?: string[];
+    recommendation_reason?: string;
+    decision_summary?: string;
+    risk_notes?: string[];
+    roadmap?: Array<{ step: number; title: string; description: string }>;
+    required_documents?: string[];
+    segments?: PortfolioSegment[];
+    isAiRecommended?: boolean;
+  };
+
+  const aiOptions: NormalizedOption[] | undefined = parsed.options?.map((option) => ({
+    ...option,
+  })) ?? parsed.portfolios?.map((portfolio) => ({
+    type: portfolio.type,
+    title: portfolio.title,
+    recommendation_reasons: portfolio.recommendation_points,
+    recommendation_reason: portfolio.recommendation_reason,
+    risk_notes: portfolio.risk_notes,
+    roadmap: portfolio.roadmap,
+    required_documents: portfolio.required_documents,
+    segments: portfolio.items?.map((item, index) => ({
+      label: item.name,
+      amount: `${Math.round(item.allocated_amount / 10_000).toLocaleString("ko-KR")}만 원`,
+      value: item.allocated_amount,
+      color: (() => {
+        const colors: Record<string, string> = {
+          grant: "#ffcc00",
+          support_program: "#ffcc00",
+          policy_loan: "#3b82f6",
+          commercial_loan: "#22c55e",
+          bank_loan: "#22c55e",
+          guarantee_loan: "#22c55e",
+          guarantee: "#22c55e",
+          guaranteed_loan: "#22c55e",
+          self_funding: "#a3a3a3",
+        };
+        return colors[item.funding_type || ""]
+          ?? ["#f59e0b", "#06b6d4", "#ec4899", "#64748b"][index % 4];
+      })(),
+    })),
+    isAiRecommended: portfolio.is_ai_recommended,
+  }));
+
+  if (!aiOptions?.length) throw new Error("portfolio_llm 응답에 포트폴리오가 없습니다.");
+
+  const options = aiOptions.flatMap((aiOption) => {
+    const normalizedType = aiOption.type === "stability" || aiOption.type === "stable"
+      ? "burden"
+      : aiOption.type;
+    const base = portfolioOptions.find((option) => option.slug === normalizedType);
+    if (!base) return [];
+    const calculation = calculations.find((item) => item.type === aiOption.type);
+    const calculatedSegments = calculation?.items.map((item, index) => {
+      const colors: Record<string, string> = {
+        grant: "#ffcc00",
+        policy_loan: "#3b82f6",
+        commercial_loan: "#22c55e",
+        guarantee_loan: "#22c55e",
+        guarantee: "#22c55e",
+        guaranteed_loan: "#22c55e",
+        self_funding: "#a3a3a3",
+      };
+      return {
+        label: item.item_name,
+        amount: `${Math.round(item.amount / 10_000).toLocaleString("ko-KR")}만 원`,
+        value: item.amount,
+        color: colors[item.funding_type]
+          ?? (item.funding_type.includes("guarantee") ? "#22c55e" : ["#f59e0b", "#06b6d4"][index % 2]),
+      };
+    });
+    return [{
+      ...base,
+      title: aiOption.title || base.title,
+      badge: aiOption.type === parsed.recommended_type || aiOption.isAiRecommended
+        ? "AI 추천"
+        : undefined,
+      segments: calculatedSegments?.length
+        ? calculatedSegments
+        : aiOption.segments?.length
+          ? aiOption.segments
+          : base.segments,
+      metrics: calculation ? [
+        {
+          label: "월 상환액",
+          value: `${Math.round(calculation.monthly_payment / 10_000).toLocaleString("ko-KR")}만 원`,
+        },
+        {
+          label: "금융비용",
+          value: `${Math.round(calculation.finance_cost / 10_000).toLocaleString("ko-KR")}만 원`,
+        },
+        { label: "확보기간", value: calculation.expected_period_label },
+      ] : base.metrics,
+      reasons: aiOption.recommendation_reasons?.length
+        ? aiOption.recommendation_reasons
+        : base.reasons,
+      stressWarning: aiOption.risk_notes?.[0] || base.stressWarning,
+      recommendationReason: "recommendation_reason" in aiOption
+        ? aiOption.recommendation_reason
+        : "decision_summary" in aiOption
+          ? aiOption.decision_summary
+          : undefined,
+      riskNotes: aiOption.risk_notes,
+      roadmap: aiOption.roadmap,
+      requiredDocuments: aiOption.required_documents,
+    }];
+  });
+
+  return {
+    recommendedType: parsed.recommended_type || options.find((option) => option.badge)?.slug || "cost",
+    summary: parsed.summary || "입력하신 사업정보와 자금 조달 선호를 바탕으로 포트폴리오를 추천했어요.",
+    disclaimer: parsed.disclaimer || "AI 추천은 입력 정보를 기반으로 한 예상안이며 실제 승인 결과는 달라질 수 있습니다.",
+    options,
+  };
+}

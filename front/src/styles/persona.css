@@ -1,0 +1,31 @@
+.persona-screen { background: linear-gradient(180deg, #fffaf0 0%, #f8f9fa 42%); min-height: 100vh; }
+.persona-header { padding: 24px 20px 18px; }
+.persona-header > a { align-items: center; display: flex; height: 32px; margin-bottom: 20px; width: 32px; }
+.persona-header h1 { color: #1f2937; font-size: 24px; line-height: 32px; margin: 0 0 8px; }
+.persona-header p { color: #6b7280; font-size: 13px; line-height: 20px; margin: 0; }
+.persona-list { display: flex; flex-direction: column; gap: 14px; padding: 4px 20px 28px; }
+.persona-card { align-items: center; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 16px rgba(31,41,55,.06); color: inherit; display: flex; gap: 14px; padding: 18px 16px; text-decoration: none; transition: border-color .2s, transform .2s, box-shadow .2s; }
+.persona-card:hover, .persona-card.selected { border-color: #10b981; box-shadow: 0 8px 24px rgba(5,150,105,.14); transform: translateY(-2px); }
+.persona-avatar { align-items: center; background: #ecfdf5; border-radius: 9999px; display: flex; flex: 0 0 62px; font-size: 30px; height: 62px; justify-content: center; }
+.persona-copy { flex: 1; min-width: 0; }
+.persona-copy > span { color: #d97706; font-size: 11px; font-weight: 700; }
+.persona-copy h2 { color: #111827; font-size: 17px; line-height: 23px; margin: 2px 0; }
+.persona-copy label { display: block; margin-top: 8px; }
+.persona-copy label > span { color: #6b7280; display: block; font-size: 10px; font-weight: 700; margin-bottom: 4px; }
+.persona-copy input { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; box-sizing: border-box; color: #111827; font-size: 13px; line-height: 18px; padding: 8px 10px; width: 100%; }
+.persona-copy input:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.12); outline: none; }
+.persona-money-input { align-items: center; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; box-sizing: border-box; display: flex; padding-right: 10px; width: 100%; }
+.persona-money-input:focus-within { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.12); }
+.persona-money-input input { background: transparent; border: 0; box-shadow: none; flex: 1 1 auto; min-width: 0; padding-right: 6px; text-align: right; width: auto; }
+.persona-money-input input:focus { box-shadow: none; }
+.persona-money-input small { color: #6b7280; flex: 0 0 auto; font-size: 11px; line-height: 16px; white-space: nowrap; }
+.persona-copy > p { color: #6b7280; font-size: 11px; line-height: 17px; margin: 8px 0; word-break: keep-all; }
+.persona-copy > div { display: flex; flex-wrap: wrap; gap: 5px; }
+.persona-copy > div span { background: #f3f4f6; border-radius: 6px; color: #4b5563; font-size: 9px; padding: 4px 6px; }
+.persona-card > button { align-items: center; background: #fef3c7; border: 0; border-radius: 8px; color: #92400e; cursor: pointer; display: flex; flex: 0 0 52px; flex-direction: column; font-size: 10px; font-weight: 700; gap: 5px; justify-content: center; min-height: 42px; padding: 7px 8px; }
+.persona-card > button:disabled { background: #10b981; color: #fff; cursor: wait; }
+.persona-button-spinner { animation: persona-spin .8s linear infinite; border: 2px solid rgba(255,255,255,.45); border-radius: 9999px; border-top-color: #fff; display: block; height: 14px; width: 14px; }
+.persona-error { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #b91c1c; font-size: 12px; line-height: 18px; margin: 0; padding: 10px 12px; }
+.persona-empty { color: #6b7280; padding: 40px 0; text-align: center; }
+@keyframes persona-spin { to { transform: rotate(360deg); } }
+@media (max-width: 359px) { .persona-card { align-items: flex-start; } .persona-avatar { flex-basis: 48px; height: 48px; font-size: 24px; } .persona-card > button { align-self: flex-start; } }

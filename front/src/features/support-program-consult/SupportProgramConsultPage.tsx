@@ -70,7 +70,7 @@ export default function SupportProgramConsultPage() {
               <p>
                 예약해 주시면 원하는 시간에 맞추어
                 <br />
-                유선 상담을 진행합니다.
+                대면 상담을 진행합니다.
               </p>
             </div>
           </section>

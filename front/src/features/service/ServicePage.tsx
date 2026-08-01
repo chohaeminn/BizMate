@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { topRecommendedPrograms } from "@/data/supportPrograms";
+import type { BusinessProfile, SupportProgram } from "@/data/supportPrograms";
 
 const heroServices = [
   {
@@ -8,6 +8,7 @@ const heroServices = [
     description: "맞춤형 자금 계획 수립",
     icon: "/service/service-portfolio.svg",
     tone: "blue",
+    href: "/portfolio",
   },
   {
     title: "세금 절세 서비스",
@@ -18,14 +19,7 @@ const heroServices = [
   },
 ];
 
-const statusItems = [
-  {
-    label: "추천사업",
-    value: "7",
-    unit: "개",
-    icon: "/service/service-recommend.svg",
-    tone: "green",
-  },
+const baseStatusItems = [
   {
     label: "신청마감 임박",
     value: "2",
@@ -42,7 +36,35 @@ const statusItems = [
   },
 ];
 
-export default function ServicePage() {
+type ServicePageProps = {
+  programs: SupportProgram[];
+  profile: BusinessProfile | null;
+  recommendationSummary: string | null;
+};
+
+export default function ServicePage({ programs, profile, recommendationSummary }: ServicePageProps) {
+  const topRecommendedPrograms = programs.slice(0, 3);
+  const statusItems = [
+    {
+      label: "추천사업",
+      value: String(programs.length),
+      unit: "개",
+      icon: "/service/service-recommend.svg",
+      tone: "green",
+    },
+    ...baseStatusItems,
+  ];
+
+  const preserveAiAnalysis = (program: SupportProgram) => {
+    window.sessionStorage.setItem(
+      `bizmate-support-analysis:${program.id}`,
+      JSON.stringify({
+        analysisTitle: program.analysisTitle,
+        analysisItems: program.analysisItems,
+        matchScore: program.matchScore,
+      }),
+    );
+  };
   return (
     <main className="landing">
       <div className="mobile-screen service-screen">
@@ -109,12 +131,18 @@ export default function ServicePage() {
 
           <section className="ai-recommendations" aria-labelledby="recommend-title">
             <div className="recommend-heading">
-              <h2 id="recommend-title">AI 추천 맞춤 사업 TOP3</h2>
+              <h2 id="recommend-title">
+                {profile ? `${profile.business_name} 맞춤 지원사업` : "AI 추천 맞춤 지원사업"}
+              </h2>
               <Link href="/support-programs" className="recommend-view-all">
                 전체보기
                 <Image src="/service/service-chevron.svg" alt="" width={12} height={12} />
               </Link>
             </div>
+
+            {recommendationSummary ? (
+              <p className="recommendation-summary">{recommendationSummary}</p>
+            ) : null}
 
             <div className="recommend-card-list">
               {topRecommendedPrograms.map((recommendation) => (
@@ -123,6 +151,7 @@ export default function ServicePage() {
                   className={`recommend-card ${recommendation.featured ? "featured" : ""}`}
                   key={recommendation.title}
                   aria-label={`${recommendation.title} 상세 보기`}
+                  onClick={() => preserveAiAnalysis(recommendation)}
                 >
                   {recommendation.featured ? (
                     <div className="today-badge">오늘의 추천</div>
@@ -153,10 +182,6 @@ export default function ServicePage() {
                     <div>
                       <span>지원금</span>
                       <strong>{recommendation.supportAmountLabel}</strong>
-                    </div>
-                    <div>
-                      <span>금리(예상)</span>
-                      <strong>{recommendation.estimatedRateLabel ?? "-"}</strong>
                     </div>
                     <div>
                       <span>신청마감</span>

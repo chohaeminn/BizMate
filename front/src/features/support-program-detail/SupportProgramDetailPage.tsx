@@ -10,6 +10,31 @@ type SupportProgramDetailPageProps = {
 export default function SupportProgramDetailPage({ program }: SupportProgramDetailPageProps) {
   const [isInterested, setIsInterested] = useState(false);
   const [showInterestModal, setShowInterestModal] = useState(false);
+  const [analysis, setAnalysis] = useState({
+    title: program.analysisTitle,
+    items: program.analysisItems,
+    score: program.matchScore,
+  });
+
+  useEffect(() => {
+    const stored = window.sessionStorage.getItem(`bizmate-support-analysis:${program.id}`);
+    if (!stored) return;
+
+    try {
+      const parsed = JSON.parse(stored) as {
+        analysisTitle?: string;
+        analysisItems?: string[];
+        matchScore?: number;
+      };
+      setAnalysis({
+        title: parsed.analysisTitle || program.analysisTitle,
+        items: parsed.analysisItems?.length ? parsed.analysisItems : program.analysisItems,
+        score: parsed.matchScore ?? program.matchScore,
+      });
+    } catch {
+      window.sessionStorage.removeItem(`bizmate-support-analysis:${program.id}`);
+    }
+  }, [program]);
 
   useEffect(() => {
     if (!showInterestModal) {
@@ -94,9 +119,9 @@ export default function SupportProgramDetailPage({ program }: SupportProgramDeta
                 <Image src="/support-program-detail/detail-ai-code.svg" alt="" width={16} height={16} />
                 <span>AI 분석 결과</span>
               </div>
-              <h2 id="analysis-title">{program.analysisTitle}</h2>
+              <h2 id="analysis-title">{analysis.title}</h2>
               <ul>
-                {program.analysisItems.map((item) => (
+                {analysis.items.map((item) => (
                   <li key={item}>
                     <Image src="/support-program-detail/detail-check.svg" alt="" width={8} height={8} />
                     {item}
@@ -104,13 +129,15 @@ export default function SupportProgramDetailPage({ program }: SupportProgramDeta
                 ))}
               </ul>
             </div>
-            <div className="fit-score" aria-label={`적합도 ${program.matchScore}%`}>
-              <span>적합도</span>
-              <strong>
-                {program.matchScore}
-                <small>%</small>
-              </strong>
-            </div>
+            {analysis.score > 0 ? (
+              <div className="fit-score" aria-label={`적합도 ${analysis.score}%`}>
+                <span>적합도</span>
+                <strong>
+                  {analysis.score}
+                  <small>%</small>
+                </strong>
+              </div>
+            ) : null}
           </section>
 
           <section className="program-detail-list" aria-label="지원사업 상세 정보">

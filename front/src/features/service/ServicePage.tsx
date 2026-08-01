@@ -54,6 +54,17 @@ export default function ServicePage({ programs, profile, recommendationSummary }
     },
     ...baseStatusItems,
   ];
+
+  const preserveAiAnalysis = (program: SupportProgram) => {
+    window.sessionStorage.setItem(
+      `bizmate-support-analysis:${program.id}`,
+      JSON.stringify({
+        analysisTitle: program.analysisTitle,
+        analysisItems: program.analysisItems,
+        matchScore: program.matchScore,
+      }),
+    );
+  };
   return (
     <main className="landing">
       <div className="mobile-screen service-screen">
@@ -140,6 +151,7 @@ export default function ServicePage({ programs, profile, recommendationSummary }
                   className={`recommend-card ${recommendation.featured ? "featured" : ""}`}
                   key={recommendation.title}
                   aria-label={`${recommendation.title} 상세 보기`}
+                  onClick={() => preserveAiAnalysis(recommendation)}
                 >
                   {recommendation.featured ? (
                     <div className="today-badge">오늘의 추천</div>

@@ -1,15 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { PortfolioContext } from "@/lib/portfolioApi";
 
-const businessInfoItems = [
+const formatWon = (value: number) => `${Math.round(value / 10_000).toLocaleString("ko-KR")}만 원`;
+
+export default function PortfolioPage({ context }: { context: PortfolioContext }) {
+  const totalDebt = context.external_debts.reduce((sum, debt) => sum + debt.balance_amount, 0);
+  const monthlyDebt = context.external_debts.reduce((sum, debt) => sum + debt.monthly_payment, 0);
+  const businessInfoItems = [
   {
     label: "사업장",
-    value: "대구광역시 중구",
+    value: context.profile.region_name || "정보 없음",
     icon: "/portfolio/portfolio-location.svg",
   },
   {
     label: "업종",
-    value: "한식 일반 음식점업",
+    value: context.profile.industry_name || "정보 없음",
     icon: "/portfolio/portfolio-industry.svg",
   },
   {
@@ -19,12 +25,12 @@ const businessInfoItems = [
   },
   {
     label: "현재 가용잔액",
-    value: "1,215만 원",
+    value: formatWon(context.profile.available_cash_amount ?? 0),
     icon: "/portfolio/portfolio-balance.svg",
   },
   {
     label: "월평균 매출",
-    value: "1,500만 원",
+    value: formatWon(Math.round(context.profile.annual_sales / 12)),
     icon: "/portfolio/portfolio-sales.svg",
   },
   {
@@ -34,22 +40,20 @@ const businessInfoItems = [
   },
   {
     label: "기존 대출잔액",
-    value: "3,000만 원",
+    value: formatWon(totalDebt),
     icon: "/portfolio/portfolio-debt.svg",
   },
   {
     label: "기존 월 상환액",
-    value: "78만 원",
+    value: formatWon(monthlyDebt),
     icon: "/portfolio/portfolio-repayment.svg",
   },
   {
     label: "월 반복지출",
-    value: "820만 원",
+    value: formatWon(context.profile.monthly_fixed_expense ?? 0),
     icon: "/portfolio/portfolio-expense.svg",
   },
-];
-
-export default function PortfolioPage() {
+  ];
   return (
     <main className="landing">
       <div className="mobile-screen portfolio-screen">

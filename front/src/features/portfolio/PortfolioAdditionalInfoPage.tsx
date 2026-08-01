@@ -1,7 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ExternalDebt } from "@/lib/portfolioApi";
 
-const debtCards = [
+const formatWon = (value: number) => `${Math.round(value / 10_000).toLocaleString("ko-KR")}만 원`;
+
+export default function PortfolioAdditionalInfoPage({ debts }: { debts: ExternalDebt[] }) {
+  const debtCards = debts.map((debt) => ({
+    title: debt.lender_name || debt.debt_type,
+    icon: "/portfolio/portfolio-bank.svg",
+    metrics: [
+      { label: "잔액", value: formatWon(debt.balance_amount) },
+      { label: "금리", value: `${(Number(debt.annual_rate) * 100).toFixed(1)}%` },
+      { label: "월 상환액", value: formatWon(debt.monthly_payment) },
+      { label: "만기", value: debt.maturity_date?.replaceAll("-", ".") || "정보 없음" },
+    ],
+  }));
+  const visibleDebtCards = debtCards.length ? debtCards : [
   {
     title: "타행 사업자대출",
     icon: "/portfolio/portfolio-bank.svg",
@@ -21,11 +35,10 @@ const debtCards = [
       { label: "만기", value: "2026.10.31" },
     ],
   },
-];
+  ];
 
 const actionItems = ["타행 대출 추가", "지원이력 추가"];
 
-export default function PortfolioAdditionalInfoPage() {
   return (
     <main className="landing">
       <div className="mobile-screen portfolio-screen portfolio-step-screen">
@@ -64,7 +77,7 @@ export default function PortfolioAdditionalInfoPage() {
           <section className="portfolio-section" aria-labelledby="external-debt-title">
             <h2 id="external-debt-title">현재 입력된 외부 채무</h2>
             <div className="portfolio-debt-list">
-              {debtCards.map((card) => (
+              {visibleDebtCards.map((card) => (
                 <article className="portfolio-debt-card" key={card.title}>
                   <div className="portfolio-debt-heading">
                     <div className="portfolio-debt-title">

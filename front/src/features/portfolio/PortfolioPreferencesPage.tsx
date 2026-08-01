@@ -1,8 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { loadPortfolioFlowInput, savePortfolioFlowInput } from "@/lib/portfolioSession";
+import type { PortfolioContext } from "@/lib/portfolioApi";
 
-const fundingOptions = [
+const fundingOptions: Array<{
+  id: "cost" | "speed" | "burden";
+  label: string;
+  icon?: string;
+  symbol?: string;
+}> = [
   {
     id: "cost",
     label: "대출 비용 최소",
@@ -14,17 +21,10 @@ const fundingOptions = [
     icon: "/portfolio/portfolio-clock.svg",
   },
   {
-    id: "repayment",
+    id: "burden",
     label: "월 상환 부담 최소",
     symbol: "₩",
   },
-];
-
-const currentFunds = [
-  { label: "현재 가용잔액", value: "1,215만 원" },
-  { label: "향후 30일 예정지출", value: "820만 원" },
-  { label: "이번 계획에 사용할 금액", value: "500만 원" },
-  { label: "최소 유지 희망자금", value: "1,000만 원" },
 ];
 
 const repaymentOptions = [
@@ -33,8 +33,19 @@ const repaymentOptions = [
   { label: "최대", value: "110만 원" },
 ];
 
-export default function PortfolioPreferencesPage() {
-  const [selectedFunding, setSelectedFunding] = useState("cost");
+const formatWon = (value: number) => `${Math.round(value / 10_000).toLocaleString("ko-KR")}만 원`;
+
+export default function PortfolioPreferencesPage({ context }: { context: PortfolioContext }) {
+  const [selectedFunding, setSelectedFunding] = useState(() => loadPortfolioFlowInput().preference);
+  const currentFunds = [
+    { label: "현재 가용잔액", value: formatWon(context.profile.available_cash_amount ?? 0) },
+    { label: "향후 30일 예정지출", value: formatWon(context.profile.monthly_fixed_expense ?? 0) },
+    {
+      label: "이번 계획에 사용할 금액",
+      value: formatWon(context.funding_request?.self_funding_amount ?? 5_000_000),
+    },
+    { label: "최소 유지 희망자금", value: "1,000만 원" },
+  ];
 
   return (
     <main className="landing">
@@ -164,7 +175,11 @@ export default function PortfolioPreferencesPage() {
         </div>
 
         <footer className="portfolio-footer portfolio-analysis-footer">
-          <Link href="/portfolio/analysis" className="portfolio-analysis-button">
+          <Link
+            href="/portfolio/analysis"
+            className="portfolio-analysis-button"
+            onClick={() => savePortfolioFlowInput({ preference: selectedFunding })}
+          >
             분석 시작
           </Link>
           <Link href="/service" className="portfolio-later-button">

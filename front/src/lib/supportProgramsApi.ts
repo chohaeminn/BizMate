@@ -48,6 +48,20 @@ type AiInvokeResponse = {
   output: string;
 };
 
+type AiPersonalizedResult = {
+  profile: BusinessProfile | null;
+  programs: SupportProgram[];
+  summary: string | null;
+};
+
+const globalWithSupportCache = globalThis as typeof globalThis & {
+  __bizmateSupportAiCache?: Map<string, Promise<AiPersonalizedResult>>;
+};
+
+const supportAiCache = globalWithSupportCache.__bizmateSupportAiCache
+  ?? new Map<string, Promise<AiPersonalizedResult>>();
+globalWithSupportCache.__bizmateSupportAiCache = supportAiCache;
+
 async function request<T>(path: string): Promise<T> {
   const response = await fetch(`${backendApiUrl}${path}`, {
     headers: { Accept: "application/json" },
@@ -137,18 +151,10 @@ export async function getPersonalizedSupportPrograms(): Promise<{
   return { profile, programs: await getRecommendations(profile.id) };
 }
 
-export async function getAiPersonalizedSupportPrograms(): Promise<{
-  profile: BusinessProfile | null;
-  programs: SupportProgram[];
-  summary: string | null;
-}> {
-  const [profile, rawPrograms] = await Promise.all([
-    getLatestBusinessProfile(),
-    request<SupportProgramApiResponse[]>("/support-programs"),
-  ]);
-
-  if (!profile) return { profile: null, programs: [], summary: null };
-
+async function generateAiPersonalizedSupportPrograms(
+  profile: BusinessProfile,
+  rawPrograms: SupportProgramApiResponse[],
+): Promise<AiPersonalizedResult> {
   const content = JSON.stringify({
     business_profile: {
       id: profile.id,
@@ -197,6 +203,52 @@ export async function getAiPersonalizedSupportPrograms(): Promise<{
   }
 
   return { profile, programs, summary: aiOutput.summary || null };
+}
+
+export async function getAiPersonalizedSupportPrograms(): Promise<AiPersonalizedResult> {
+  const [profile, rawPrograms] = await Promise.all([
+    getLatestBusinessProfile(),
+    request<SupportProgramApiResponse[]>("/support-programs"),
+  ]);
+
+  if (!profile) return { profile: null, programs: [], summary: null };
+
+  const cacheKey = JSON.stringify({
+    profile: {
+      id: profile.id,
+      region_name: profile.region_name,
+      industry_name: profile.industry_name,
+      annual_sales: profile.annual_sales,
+      created_at: profile.created_at,
+    },
+    programs: rawPrograms.map((program) => ({
+      id: program.id,
+      created_at: program.created_at,
+      title: program.title,
+      support_amount: program.support_amount,
+      application_end_date: program.application_end_date,
+    })),
+  });
+
+  let cached = supportAiCache.get(cacheKey);
+  if (!cached) {
+    cached = generateAiPersonalizedSupportPrograms(profile, rawPrograms);
+    supportAiCache.set(cacheKey, cached);
+  }
+
+  try {
+    const result = await cached;
+    const businessCondition = [profile.region_name, profile.industry_name]
+      .filter(Boolean)
+      .join("·");
+    return {
+      ...result,
+      summary: `${businessCondition || "사업자"} 조건을 분석해 신청 적합도가 높은 맞춤 지원사업 ${result.programs.length}개를 추천합니다.`,
+    };
+  } catch (error) {
+    supportAiCache.delete(cacheKey);
+    throw error;
+  }
 }
 
 export async function getSupportProgram(programId: string): Promise<SupportProgram> {

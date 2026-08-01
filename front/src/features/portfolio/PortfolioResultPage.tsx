@@ -1,8 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { useState } from "react";
-import { getDonutBackground, portfolioOptions, type PortfolioSegment } from "./portfolioData";
+import { useEffect, useState } from "react";
+import { loadPortfolioFlowInput } from "@/lib/portfolioSession";
+import {
+  getDonutBackground,
+  mergePortfolioLlmOutput,
+  portfolioOptions,
+  type PortfolioSegment,
+} from "./portfolioData";
 
 function PortfolioDonut({ segments }: { segments: PortfolioSegment[] }) {
   return (
@@ -15,7 +21,45 @@ function PortfolioDonut({ segments }: { segments: PortfolioSegment[] }) {
 }
 
 export default function PortfolioResultPage() {
+  const [options, setOptions] = useState(portfolioOptions);
   const [selectedSlug, setSelectedSlug] = useState(portfolioOptions[0].slug);
+
+  useEffect(() => {
+    const input = loadPortfolioFlowInput();
+    const cacheKey = `bizmate-portfolio-result:${JSON.stringify(input)}`;
+    const cached = window.sessionStorage.getItem(cacheKey);
+
+    const applyOutput = (output: string) => {
+      const nextOptions = mergePortfolioLlmOutput(output);
+      if (!nextOptions.length) return;
+      setOptions(nextOptions);
+      setSelectedSlug(nextOptions.find((option) => option.badge)?.slug ?? nextOptions[0].slug);
+    };
+
+    if (cached) {
+      try {
+        applyOutput(cached);
+        return;
+      } catch {
+        window.sessionStorage.removeItem(cacheKey);
+      }
+    }
+
+    void fetch("/api/portfolio/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`portfolio_llm 호출 실패 (${response.status})`);
+        return response.json() as Promise<{ output: string }>;
+      })
+      .then(({ output }) => {
+        window.sessionStorage.setItem(cacheKey, output);
+        applyOutput(output);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   return (
     <main className="landing">
@@ -48,7 +92,7 @@ export default function PortfolioResultPage() {
           </section>
 
           <section className="portfolio-result-list" aria-label="추천 포트폴리오 목록">
-            {portfolioOptions.map((option) => {
+            {options.map((option) => {
               const selected = selectedSlug === option.slug;
 
               return (

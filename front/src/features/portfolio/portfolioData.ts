@@ -102,3 +102,72 @@ export function getDonutBackground(segments: PortfolioSegment[]) {
 
   return `conic-gradient(${stops.join(", ")})`;
 }
+
+export function mergePortfolioLlmOutput(output: string): PortfolioOption[] {
+  const normalized = output.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+  const parsed = JSON.parse(normalized) as {
+    recommended_type?: string;
+    options?: Array<{
+      type: string;
+      title?: string;
+      recommendation_reasons?: string[];
+      risk_notes?: string[];
+    }>;
+    portfolios?: Array<{
+      type: string;
+      title?: string;
+      is_ai_recommended?: boolean;
+      recommendation_points?: string[];
+      risk_notes?: string[];
+      items?: Array<{
+        name: string;
+        allocated_amount: number;
+      }>;
+    }>;
+  };
+
+  type NormalizedOption = {
+    type: string;
+    title?: string;
+    recommendation_reasons?: string[];
+    risk_notes?: string[];
+    segments?: PortfolioSegment[];
+    isAiRecommended?: boolean;
+  };
+
+  const aiOptions: NormalizedOption[] | undefined = parsed.options?.map((option) => ({
+    ...option,
+  })) ?? parsed.portfolios?.map((portfolio) => ({
+    type: portfolio.type,
+    title: portfolio.title,
+    recommendation_reasons: portfolio.recommendation_points,
+    risk_notes: portfolio.risk_notes,
+    segments: portfolio.items?.map((item, index) => ({
+      label: item.name,
+      amount: `${Math.round(item.allocated_amount / 10_000).toLocaleString("ko-KR")}만 원`,
+      value: item.allocated_amount,
+      color: ["#fc0", "#ffd700", "#a3a3a3", "#e5e5e5"][index % 4],
+    })),
+    isAiRecommended: portfolio.is_ai_recommended,
+  }));
+
+  if (!aiOptions?.length) throw new Error("portfolio_llm 응답에 포트폴리오가 없습니다.");
+
+  return aiOptions.flatMap((aiOption) => {
+    const normalizedType = aiOption.type === "stability" ? "burden" : aiOption.type;
+    const base = portfolioOptions.find((option) => option.slug === normalizedType);
+    if (!base) return [];
+    return [{
+      ...base,
+      title: aiOption.title || base.title,
+      badge: aiOption.type === parsed.recommended_type || aiOption.isAiRecommended
+        ? "AI 추천"
+        : undefined,
+      segments: aiOption.segments?.length ? aiOption.segments : base.segments,
+      reasons: aiOption.recommendation_reasons?.length
+        ? aiOption.recommendation_reasons
+        : base.reasons,
+      stressWarning: aiOption.risk_notes?.[0] || base.stressWarning,
+    }];
+  });
+}

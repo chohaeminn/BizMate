@@ -154,6 +154,7 @@ export async function getPersonalizedSupportPrograms(): Promise<{
 async function generateAiPersonalizedSupportPrograms(
   profile: BusinessProfile,
   rawPrograms: SupportProgramApiResponse[],
+  backendRecommendations: RecommendationApiResponse[],
 ): Promise<AiPersonalizedResult> {
   const content = JSON.stringify({
     business_profile: {
@@ -170,6 +171,11 @@ async function generateAiPersonalizedSupportPrograms(
       support_type: program.support_type,
       support_amount: program.support_amount,
       application_end_date: program.application_end_date,
+    })),
+    backend_recommendations: backendRecommendations.map((recommendation) => ({
+      program_id: recommendation.program.id,
+      score: recommendation.score,
+      reason: recommendation.reason,
     })),
     user_context: {
       current_page: "/support",
@@ -208,12 +214,13 @@ async function generateAiPersonalizedSupportPrograms(
 export async function getAiPersonalizedSupportPrograms(
   cacheScope = "shared",
 ): Promise<AiPersonalizedResult> {
-  const [profile, rawPrograms] = await Promise.all([
-    getLatestBusinessProfile(),
-    request<SupportProgramApiResponse[]>("/support-programs"),
-  ]);
+  const profile = await getLatestBusinessProfile();
 
   if (!profile) return { profile: null, programs: [], summary: null };
+  const [rawPrograms, backendRecommendations] = await Promise.all([
+    request<SupportProgramApiResponse[]>("/support-programs"),
+    request<RecommendationApiResponse[]>(`/recommendations/${encodeURIComponent(profile.id)}`),
+  ]);
 
   const cacheKey = JSON.stringify({
     cacheScope,
@@ -231,11 +238,16 @@ export async function getAiPersonalizedSupportPrograms(
       support_amount: program.support_amount,
       application_end_date: program.application_end_date,
     })),
+    backendRecommendations: backendRecommendations.map((recommendation) => ({
+      program_id: recommendation.program.id,
+      score: recommendation.score,
+      reason: recommendation.reason,
+    })),
   });
 
   let cached = supportAiCache.get(cacheKey);
   if (!cached) {
-    cached = generateAiPersonalizedSupportPrograms(profile, rawPrograms);
+    cached = generateAiPersonalizedSupportPrograms(profile, rawPrograms, backendRecommendations);
     supportAiCache.set(cacheKey, cached);
   }
 
@@ -250,7 +262,14 @@ export async function getAiPersonalizedSupportPrograms(
     };
   } catch (error) {
     supportAiCache.delete(cacheKey);
-    throw error;
+    console.error("support_llm 호출 실패, 백엔드 추천 결과를 사용합니다:", error);
+    return {
+      profile,
+      programs: backendRecommendations.slice(0, 3).map((recommendation, index) =>
+        mapSupportProgram(recommendation.program, index, recommendation),
+      ),
+      summary: `${profile.business_name}의 지역·업종 조건을 기준으로 백엔드가 추천한 지원사업입니다.`,
+    };
   }
 }
 

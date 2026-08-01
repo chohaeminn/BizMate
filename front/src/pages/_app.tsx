@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import "@/styles/globals.css";
 import "@/styles/landing.css";
 import "@/styles/service.css";
+import "@/styles/portfolio.css";
 import "@/styles/tax-saving.css";
 import "@/styles/tax-saving-vat-guide.css";
 import "@/styles/tax-saving-guide.css";

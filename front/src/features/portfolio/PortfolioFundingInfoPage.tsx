@@ -1,22 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { loadPortfolioFlowInput, savePortfolioFlowInput } from "@/lib/portfolioSession";
 
 const fundingFields = [
   {
     label: "필요한 금액",
     placeholder: "예: 3,000만 원",
     type: "text",
+    key: "requiredAmount" as const,
   },
   {
     label: "자금 사용 목적",
     placeholder: "예: 매장 리모델링 및 운영자금",
     type: "text",
+    key: "fundingPurpose" as const,
   },
   {
     label: "필요한 시점",
     placeholder: "예: 2026년 9월",
     type: "text",
+    key: "neededAt" as const,
   },
 ];
 
@@ -66,6 +70,7 @@ function formatManwon(value: number) {
 }
 
 export default function PortfolioFundingInfoPage() {
+  const [form, setForm] = useState(() => loadPortfolioFlowInput());
   const [planRows, setPlanRows] = useState<PlanRow[]>([
     { id: 1, purpose: "", amount: "" },
   ]);
@@ -126,12 +131,27 @@ export default function PortfolioFundingInfoPage() {
             {fundingFields.map((field) => (
               <label className="portfolio-input-row" key={field.label}>
                 <span>{field.label}</span>
-                <input type={field.type} placeholder={field.placeholder} />
+                <input
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  value={form[field.key]}
+                  onChange={(event) => setForm((current) => ({
+                    ...current,
+                    [field.key]: event.target.value,
+                  }))}
+                />
               </label>
             ))}
             <label className="portfolio-input-row portfolio-textarea-row">
               <span>상세 설명</span>
-              <textarea placeholder="예: 성수기 전 재고 확보와 주방 설비 교체가 필요해요" />
+              <textarea
+                placeholder="예: 성수기 전 재고 확보와 주방 설비 교체가 필요해요"
+                value={form.description}
+                onChange={(event) => setForm((current) => ({
+                  ...current,
+                  description: event.target.value,
+                }))}
+              />
             </label>
           </section>
 
@@ -172,7 +192,14 @@ export default function PortfolioFundingInfoPage() {
         </div>
 
         <footer className="portfolio-footer portfolio-double-footer">
-          <Link href="/portfolio/preferences" className="portfolio-primary-button">
+          <Link
+            href="/portfolio/preferences"
+            className="portfolio-primary-button"
+            onClick={() => savePortfolioFlowInput({
+              ...form,
+              usePlans: planRows.map(({ purpose, amount }) => ({ purpose, amount })),
+            })}
+          >
             확인하고 다음
           </Link>
           <Link href="/portfolio/additional-info" className="portfolio-secondary-button">

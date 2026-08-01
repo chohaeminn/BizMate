@@ -58,7 +58,7 @@ Azure CLI 로그인 등 현재 실행 환경에서 사용할 수 있는 Azure �
 준비되어 있어야 합니다.
 
 ```bash
-az login
+Managed Identity
 ```
 
 ## 3. 백엔드 실행

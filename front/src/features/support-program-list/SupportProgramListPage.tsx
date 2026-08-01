@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { supportPrograms } from "@/data/supportPrograms";
+import type { BusinessProfile, SupportProgram } from "@/data/supportPrograms";
 
 const filters = [
   { label: "지역", icon: "/support-program-list/list-location.svg" },
@@ -9,8 +9,13 @@ const filters = [
   { label: "정렬", icon: "/support-program-list/list-sort.svg" },
 ];
 
-export default function SupportProgramListPage() {
-  const renderProgramCard = (program: (typeof supportPrograms)[number]) => {
+type SupportProgramListPageProps = {
+  programs: SupportProgram[];
+  profile: BusinessProfile | null;
+};
+
+export default function SupportProgramListPage({ programs, profile }: SupportProgramListPageProps) {
+  const renderProgramCard = (program: SupportProgram) => {
     const cardContent = (
       <>
         {program.featured ? <span className="list-ai-badge">AI 추천</span> : null}
@@ -28,10 +33,6 @@ export default function SupportProgramListPage() {
               <div>
                 <span>지원금</span>
                 <strong>{program.supportAmountLabel}</strong>
-              </div>
-              <div>
-                <span>예상금리</span>
-                <strong>{program.estimatedRateLabel ?? "-"}</strong>
               </div>
               <div>
                 <span>신청마감</span>
@@ -85,9 +86,9 @@ export default function SupportProgramListPage() {
           <section className="list-summary-card" aria-label="추천 결과 요약">
             <Image src="/support-program-list/list-bulb.svg" alt="" width={28} height={32} />
             <div>
-              <p>사업장 조건에 맞는</p>
+              <p>{profile ? `${profile.business_name} 조건에 맞는` : "사업장 조건에 맞는"}</p>
               <strong>
-                총 <span>7개</span>의 지원사업을 추천했어요.
+                총 <span>{programs.length}개</span>의 지원사업을 추천했어요.
               </strong>
             </div>
           </section>
@@ -115,7 +116,7 @@ export default function SupportProgramListPage() {
           </nav>
 
           <section className="program-card-list" aria-label="추천 지원사업 목록">
-            {supportPrograms.map((program) => renderProgramCard(program))}
+            {programs.map((program) => renderProgramCard(program))}
           </section>
 
           <section className="list-interest-banner" aria-label="관심사업 알림">

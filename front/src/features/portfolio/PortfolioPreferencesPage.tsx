@@ -1,8 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { clearPortfolioResultCache, loadPortfolioFlowInput, savePortfolioFlowInput } from "@/lib/portfolioSession";
+import type { PortfolioContext } from "@/lib/portfolioApi";
 
-const fundingOptions = [
+const fundingOptions: Array<{
+  id: "cost" | "speed" | "burden";
+  label: string;
+  icon?: string;
+  symbol?: string;
+}> = [
   {
     id: "cost",
     label: "대출 비용 최소",
@@ -14,27 +21,36 @@ const fundingOptions = [
     icon: "/portfolio/portfolio-clock.svg",
   },
   {
-    id: "repayment",
+    id: "burden",
     label: "월 상환 부담 최소",
     symbol: "₩",
   },
 ];
 
-const currentFunds = [
-  { label: "현재 가용잔액", value: "1,215만 원" },
-  { label: "향후 30일 예정지출", value: "820만 원" },
-  { label: "이번 계획에 사용할 금액", value: "500만 원" },
-  { label: "최소 유지 희망자금", value: "1,000만 원" },
-];
+const formatWon = (value: number) => `${Math.round(value / 10_000).toLocaleString("ko-KR")}만 원`;
+const roundRepayment = (value: number) => Math.max(100_000, Math.round(value / 100_000) * 100_000);
 
-const repaymentOptions = [
-  { label: "보수적", value: "70만 원" },
-  { label: "권장", value: "90만 원", selected: true },
-  { label: "최대", value: "110만 원" },
-];
-
-export default function PortfolioPreferencesPage() {
-  const [selectedFunding, setSelectedFunding] = useState("cost");
+export default function PortfolioPreferencesPage({ context }: { context: PortfolioContext }) {
+  const flowInput = loadPortfolioFlowInput();
+  const overrides = flowInput.businessInfoOverrides;
+  const [selectedFunding, setSelectedFunding] = useState(() => flowInput.preference);
+  const recommendedRepayment = context.funding_request?.max_monthly_payment
+    || overrides?.existingMonthlyPayment
+    || 900_000;
+  const repaymentOptions = [
+    { label: "보수적", value: formatWon(roundRepayment(recommendedRepayment * 0.8)) },
+    { label: "권장", value: formatWon(recommendedRepayment), selected: true },
+    { label: "최대", value: formatWon(roundRepayment(recommendedRepayment * 1.2)) },
+  ];
+  const currentFunds = [
+    { label: "현재 가용잔액", value: formatWon(overrides?.availableCashAmount ?? context.profile.available_cash_amount ?? 0) },
+    { label: "향후 30일 예정지출", value: formatWon(overrides?.monthlyFixedExpense ?? context.profile.monthly_fixed_expense ?? 0) },
+    {
+      label: "이번 계획에 사용할 금액",
+      value: formatWon(context.funding_request?.self_funding_amount ?? 5_000_000),
+    },
+    { label: "최소 유지 희망자금", value: "1,000만 원" },
+  ];
 
   return (
     <main className="landing">
@@ -107,7 +123,7 @@ export default function PortfolioPreferencesPage() {
           </section>
 
           <section className="portfolio-preference-card" aria-labelledby="current-funds-title">
-            <h2 id="current-funds-title">분석한 현재 자금이에요</h2>
+            <h2 id="current-funds-title">확인한 현재 자금이에요</h2>
             <div className="portfolio-summary-list">
               {currentFunds.map((item) => (
                 <div className="portfolio-summary-row" key={item.label}>
@@ -147,7 +163,7 @@ export default function PortfolioPreferencesPage() {
             <div className="portfolio-repayment-message">
               <div className="portfolio-preferences-robot">
                 <Image
-                  src="/portfolio/portfolio-preferences-robot.png"
+                  src="/portfolio/portfolio-repayment-advice.png"
                   alt=""
                   width={50}
                   height={68}
@@ -157,14 +173,21 @@ export default function PortfolioPreferencesPage() {
               <p>
                 현재 현금흐름 기준 권장 월 상환액은
                 <br />
-                90만 원이에요.
+                {formatWon(recommendedRepayment)}이에요.
               </p>
             </div>
           </section>
         </div>
 
         <footer className="portfolio-footer portfolio-analysis-footer">
-          <Link href="/portfolio/analysis" className="portfolio-analysis-button">
+          <Link
+            href="/portfolio/result"
+            className="portfolio-analysis-button"
+            onClick={() => {
+              savePortfolioFlowInput({ preference: selectedFunding });
+              clearPortfolioResultCache();
+            }}
+          >
             분석 시작
           </Link>
           <Link href="/service" className="portfolio-later-button">

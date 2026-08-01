@@ -120,13 +120,13 @@ export default function SupportProgramApplyStatusPage() {
         </div>
 
         <div className="status-bottom-cta">
-          <Link href="/support-programs/apply/consult" className="status-consult-button">
-            추가 상담하기
+          <Link href="/service" className="status-consult-button">
+            홈으로 돌아가기
             <Image src="/apply-status/status-arrow.svg" alt="" width={20} height={20} />
           </Link>
 
-          <Link href="/service" className="status-home-button">
-            홈으로 돌아가기
+          <Link href="/support-programs/apply/consult" className="status-home-button">
+            추가 상담하기
             <Image src="/apply-status/status-arrow.svg" alt="" width={20} height={20} />
           </Link>
         </div>

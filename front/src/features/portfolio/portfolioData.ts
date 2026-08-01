@@ -13,6 +13,17 @@ export type PortfolioOption = {
   metrics: Array<{ label: string; value: string }>;
   reasons: string[];
   stressWarning: string;
+  recommendationReason?: string;
+  riskNotes?: string[];
+  roadmap?: Array<{ step: number; title: string; description: string }>;
+  requiredDocuments?: string[];
+};
+
+export type PortfolioLlmResult = {
+  recommendedType: string;
+  summary: string;
+  disclaimer: string;
+  options: PortfolioOption[];
 };
 
 export const portfolioOptions: PortfolioOption[] = [
@@ -101,4 +112,167 @@ export function getDonutBackground(segments: PortfolioSegment[]) {
   });
 
   return `conic-gradient(${stops.join(", ")})`;
+}
+
+export function mergePortfolioLlmOutput(
+  output: string,
+  calculations: Array<{
+    type: string;
+    monthly_payment: number;
+    finance_cost: number;
+    expected_period_label: string;
+    items: Array<{
+      item_name: string;
+      funding_type: string;
+      amount: number;
+    }>;
+  }> = [],
+): PortfolioLlmResult {
+  const normalized = output.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+  const parsed = JSON.parse(normalized) as {
+    recommended_type?: string;
+    summary?: string;
+    disclaimer?: string;
+    options?: Array<{
+      type: string;
+      title?: string;
+      recommendation_reasons?: string[];
+      decision_summary?: string;
+      risk_notes?: string[];
+      roadmap?: Array<{ step: number; title: string; description: string }>;
+      required_documents?: string[];
+    }>;
+    portfolios?: Array<{
+      type: string;
+      title?: string;
+      is_ai_recommended?: boolean;
+      recommendation_points?: string[];
+      recommendation_reason?: string;
+      risk_notes?: string[];
+      roadmap?: Array<{ step: number; title: string; description: string }>;
+      required_documents?: string[];
+      items?: Array<{
+        name: string;
+        funding_type?: string;
+        allocated_amount: number;
+      }>;
+    }>;
+  };
+
+  type NormalizedOption = {
+    type: string;
+    title?: string;
+    recommendation_reasons?: string[];
+    recommendation_reason?: string;
+    decision_summary?: string;
+    risk_notes?: string[];
+    roadmap?: Array<{ step: number; title: string; description: string }>;
+    required_documents?: string[];
+    segments?: PortfolioSegment[];
+    isAiRecommended?: boolean;
+  };
+
+  const aiOptions: NormalizedOption[] | undefined = parsed.options?.map((option) => ({
+    ...option,
+  })) ?? parsed.portfolios?.map((portfolio) => ({
+    type: portfolio.type,
+    title: portfolio.title,
+    recommendation_reasons: portfolio.recommendation_points,
+    recommendation_reason: portfolio.recommendation_reason,
+    risk_notes: portfolio.risk_notes,
+    roadmap: portfolio.roadmap,
+    required_documents: portfolio.required_documents,
+    segments: portfolio.items?.map((item, index) => ({
+      label: item.name,
+      amount: `${Math.round(item.allocated_amount / 10_000).toLocaleString("ko-KR")}만 원`,
+      value: item.allocated_amount,
+      color: (() => {
+        const colors: Record<string, string> = {
+          grant: "#ffcc00",
+          support_program: "#ffcc00",
+          policy_loan: "#3b82f6",
+          commercial_loan: "#22c55e",
+          bank_loan: "#22c55e",
+          guarantee_loan: "#22c55e",
+          guarantee: "#22c55e",
+          guaranteed_loan: "#22c55e",
+          self_funding: "#a3a3a3",
+        };
+        return colors[item.funding_type || ""]
+          ?? ["#f59e0b", "#06b6d4", "#ec4899", "#64748b"][index % 4];
+      })(),
+    })),
+    isAiRecommended: portfolio.is_ai_recommended,
+  }));
+
+  if (!aiOptions?.length) throw new Error("portfolio_llm 응답에 포트폴리오가 없습니다.");
+
+  const options = aiOptions.flatMap((aiOption) => {
+    const normalizedType = aiOption.type === "stability" || aiOption.type === "stable"
+      ? "burden"
+      : aiOption.type;
+    const base = portfolioOptions.find((option) => option.slug === normalizedType);
+    if (!base) return [];
+    const calculation = calculations.find((item) => item.type === aiOption.type);
+    const calculatedSegments = calculation?.items.map((item, index) => {
+      const colors: Record<string, string> = {
+        grant: "#ffcc00",
+        policy_loan: "#3b82f6",
+        commercial_loan: "#22c55e",
+        guarantee_loan: "#22c55e",
+        guarantee: "#22c55e",
+        guaranteed_loan: "#22c55e",
+        self_funding: "#a3a3a3",
+      };
+      return {
+        label: item.item_name,
+        amount: `${Math.round(item.amount / 10_000).toLocaleString("ko-KR")}만 원`,
+        value: item.amount,
+        color: colors[item.funding_type]
+          ?? (item.funding_type.includes("guarantee") ? "#22c55e" : ["#f59e0b", "#06b6d4"][index % 2]),
+      };
+    });
+    return [{
+      ...base,
+      title: aiOption.title || base.title,
+      badge: aiOption.type === parsed.recommended_type || aiOption.isAiRecommended
+        ? "AI 추천"
+        : undefined,
+      segments: calculatedSegments?.length
+        ? calculatedSegments
+        : aiOption.segments?.length
+          ? aiOption.segments
+          : base.segments,
+      metrics: calculation ? [
+        {
+          label: "월 상환액",
+          value: `${Math.round(calculation.monthly_payment / 10_000).toLocaleString("ko-KR")}만 원`,
+        },
+        {
+          label: "금융비용",
+          value: `${Math.round(calculation.finance_cost / 10_000).toLocaleString("ko-KR")}만 원`,
+        },
+        { label: "확보기간", value: calculation.expected_period_label },
+      ] : base.metrics,
+      reasons: aiOption.recommendation_reasons?.length
+        ? aiOption.recommendation_reasons
+        : base.reasons,
+      stressWarning: aiOption.risk_notes?.[0] || base.stressWarning,
+      recommendationReason: "recommendation_reason" in aiOption
+        ? aiOption.recommendation_reason
+        : "decision_summary" in aiOption
+          ? aiOption.decision_summary
+          : undefined,
+      riskNotes: aiOption.risk_notes,
+      roadmap: aiOption.roadmap,
+      requiredDocuments: aiOption.required_documents,
+    }];
+  });
+
+  return {
+    recommendedType: parsed.recommended_type || options.find((option) => option.badge)?.slug || "cost",
+    summary: parsed.summary || "입력하신 사업정보와 자금 조달 선호를 바탕으로 포트폴리오를 추천했어요.",
+    disclaimer: parsed.disclaimer || "AI 추천은 입력 정보를 기반으로 한 예상안이며 실제 승인 결과는 달라질 수 있습니다.",
+    options,
+  };
 }

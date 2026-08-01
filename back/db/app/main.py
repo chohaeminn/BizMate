@@ -3,7 +3,7 @@ from sqlalchemy import text
 
 from app import models
 from app.database import Base, engine
-from app.routers import funding_requests, portfolio_engine, tax_schedules
+from app.routers import funding_requests, portfolio_engine, tax_engine, tax_schedules
 from app.routers.ai import router as ai_router
 from app.routers.portfolios import router as portfolios_router
 from app.routers.profiles import router as profiles_router
@@ -29,6 +29,7 @@ app.include_router(funding_requests.router)
 app.include_router(portfolios_router)
 app.include_router(portfolio_engine.router)
 app.include_router(tax_schedules.router)
+app.include_router(tax_engine.router)
 app.include_router(ai_router)
 
 

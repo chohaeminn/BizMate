@@ -150,14 +150,22 @@
 }
 
 .tax-guide-recommend-copy li {
-  align-items: center;
+  align-items: flex-start;
   color: #000;
   display: flex;
   font-size: 10px;
   font-weight: 500;
   gap: 8px;
   line-height: 16.5px;
-  white-space: nowrap;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.tax-guide-recommend-copy li img {
+  flex: 0 0 auto;
+  margin-top: 3px;
 }
 
 .tax-guide-recommend-stats {
@@ -421,6 +429,29 @@
 .tax-guide-ai-tip strong span {
   color: #2563eb;
   font-weight: 700;
+}
+
+.tax-guide-message,
+.tax-guide-missing,
+.tax-guide-disclaimer,
+.tax-guide-error {
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 17px;
+  margin: 0;
+}
+
+.tax-guide-missing {
+  color: #b45309;
+}
+
+.tax-guide-error {
+  color: #dc2626;
+}
+
+.tax-guide-disclaimer {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
 }
 
 .tax-guide-robot {

@@ -15,6 +15,8 @@ export type PortfolioOption = {
   stressWarning: string;
   recommendationReason?: string;
   riskNotes?: string[];
+  roadmap?: Array<{ step: number; title: string; description: string }>;
+  requiredDocuments?: string[];
 };
 
 export type PortfolioLlmResult = {
@@ -112,7 +114,20 @@ export function getDonutBackground(segments: PortfolioSegment[]) {
   return `conic-gradient(${stops.join(", ")})`;
 }
 
-export function mergePortfolioLlmOutput(output: string): PortfolioLlmResult {
+export function mergePortfolioLlmOutput(
+  output: string,
+  calculations: Array<{
+    type: string;
+    monthly_payment: number;
+    finance_cost: number;
+    expected_period_label: string;
+    items: Array<{
+      item_name: string;
+      funding_type: string;
+      amount: number;
+    }>;
+  }> = [],
+): PortfolioLlmResult {
   const normalized = output.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
   const parsed = JSON.parse(normalized) as {
     recommended_type?: string;
@@ -124,6 +139,8 @@ export function mergePortfolioLlmOutput(output: string): PortfolioLlmResult {
       recommendation_reasons?: string[];
       decision_summary?: string;
       risk_notes?: string[];
+      roadmap?: Array<{ step: number; title: string; description: string }>;
+      required_documents?: string[];
     }>;
     portfolios?: Array<{
       type: string;
@@ -132,8 +149,11 @@ export function mergePortfolioLlmOutput(output: string): PortfolioLlmResult {
       recommendation_points?: string[];
       recommendation_reason?: string;
       risk_notes?: string[];
+      roadmap?: Array<{ step: number; title: string; description: string }>;
+      required_documents?: string[];
       items?: Array<{
         name: string;
+        funding_type?: string;
         allocated_amount: number;
       }>;
     }>;
@@ -146,6 +166,8 @@ export function mergePortfolioLlmOutput(output: string): PortfolioLlmResult {
     recommendation_reason?: string;
     decision_summary?: string;
     risk_notes?: string[];
+    roadmap?: Array<{ step: number; title: string; description: string }>;
+    required_documents?: string[];
     segments?: PortfolioSegment[];
     isAiRecommended?: boolean;
   };
@@ -158,11 +180,27 @@ export function mergePortfolioLlmOutput(output: string): PortfolioLlmResult {
     recommendation_reasons: portfolio.recommendation_points,
     recommendation_reason: portfolio.recommendation_reason,
     risk_notes: portfolio.risk_notes,
+    roadmap: portfolio.roadmap,
+    required_documents: portfolio.required_documents,
     segments: portfolio.items?.map((item, index) => ({
       label: item.name,
       amount: `${Math.round(item.allocated_amount / 10_000).toLocaleString("ko-KR")}만 원`,
       value: item.allocated_amount,
-      color: ["#fc0", "#ffd700", "#a3a3a3", "#e5e5e5"][index % 4],
+      color: (() => {
+        const colors: Record<string, string> = {
+          grant: "#ffcc00",
+          support_program: "#ffcc00",
+          policy_loan: "#3b82f6",
+          commercial_loan: "#22c55e",
+          bank_loan: "#22c55e",
+          guarantee_loan: "#22c55e",
+          guarantee: "#22c55e",
+          guaranteed_loan: "#22c55e",
+          self_funding: "#a3a3a3",
+        };
+        return colors[item.funding_type || ""]
+          ?? ["#f59e0b", "#06b6d4", "#ec4899", "#64748b"][index % 4];
+      })(),
     })),
     isAiRecommended: portfolio.is_ai_recommended,
   }));
@@ -175,13 +213,47 @@ export function mergePortfolioLlmOutput(output: string): PortfolioLlmResult {
       : aiOption.type;
     const base = portfolioOptions.find((option) => option.slug === normalizedType);
     if (!base) return [];
+    const calculation = calculations.find((item) => item.type === aiOption.type);
+    const calculatedSegments = calculation?.items.map((item, index) => {
+      const colors: Record<string, string> = {
+        grant: "#ffcc00",
+        policy_loan: "#3b82f6",
+        commercial_loan: "#22c55e",
+        guarantee_loan: "#22c55e",
+        guarantee: "#22c55e",
+        guaranteed_loan: "#22c55e",
+        self_funding: "#a3a3a3",
+      };
+      return {
+        label: item.item_name,
+        amount: `${Math.round(item.amount / 10_000).toLocaleString("ko-KR")}만 원`,
+        value: item.amount,
+        color: colors[item.funding_type]
+          ?? (item.funding_type.includes("guarantee") ? "#22c55e" : ["#f59e0b", "#06b6d4"][index % 2]),
+      };
+    });
     return [{
       ...base,
       title: aiOption.title || base.title,
       badge: aiOption.type === parsed.recommended_type || aiOption.isAiRecommended
         ? "AI 추천"
         : undefined,
-      segments: aiOption.segments?.length ? aiOption.segments : base.segments,
+      segments: calculatedSegments?.length
+        ? calculatedSegments
+        : aiOption.segments?.length
+          ? aiOption.segments
+          : base.segments,
+      metrics: calculation ? [
+        {
+          label: "월 상환액",
+          value: `${Math.round(calculation.monthly_payment / 10_000).toLocaleString("ko-KR")}만 원`,
+        },
+        {
+          label: "금융비용",
+          value: `${Math.round(calculation.finance_cost / 10_000).toLocaleString("ko-KR")}만 원`,
+        },
+        { label: "확보기간", value: calculation.expected_period_label },
+      ] : base.metrics,
       reasons: aiOption.recommendation_reasons?.length
         ? aiOption.recommendation_reasons
         : base.reasons,
@@ -192,6 +264,8 @@ export function mergePortfolioLlmOutput(output: string): PortfolioLlmResult {
           ? aiOption.decision_summary
           : undefined,
       riskNotes: aiOption.risk_notes,
+      roadmap: aiOption.roadmap,
+      requiredDocuments: aiOption.required_documents,
     }];
   });
 

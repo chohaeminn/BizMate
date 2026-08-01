@@ -7,13 +7,13 @@ export type PortfolioFlowInput = {
   preference: "cost" | "speed" | "burden";
 };
 
-const storageKey = "bizmate-portfolio-input";
+const storageKey = "bizmate-portfolio-input-v2";
 
 export const defaultPortfolioFlowInput: PortfolioFlowInput = {
-  requiredAmount: "5,000만 원",
-  fundingPurpose: "매장 리모델링 및 운영자금",
-  neededAt: "2026년 9월",
-  description: "성수기 전 재고 확보와 설비 교체가 필요해요",
+  requiredAmount: "",
+  fundingPurpose: "",
+  neededAt: "",
+  description: "",
   usePlans: [],
   preference: "cost",
 };

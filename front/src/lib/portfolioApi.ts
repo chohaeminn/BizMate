@@ -49,6 +49,43 @@ async function backendRequest<T>(path: string, init?: RequestInit): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+export async function createFundingRequest(payload: {
+  profile_id: string;
+  required_amount: number;
+  funding_purpose: string;
+  self_funding_amount: number;
+  max_monthly_payment: number;
+  optimization_priority: string;
+}) {
+  return backendRequest<{ id: string }>("/funding-requests", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getPortfolioCandidates(fundingRequestId: string) {
+  return backendRequest<Record<string, unknown>>(
+    `/portfolio-engine/candidates?funding_request_id=${encodeURIComponent(fundingRequestId)}`,
+  );
+}
+
+export async function calculatePortfolio(payload: Record<string, unknown>) {
+  return backendRequest<Record<string, unknown>>("/portfolio-engine/calculate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function savePortfolio(payload: Record<string, unknown>) {
+  return backendRequest<Record<string, unknown>>("/portfolios", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function getLatestPortfolioContext(): Promise<PortfolioContext> {
   const profiles = await backendRequest<BusinessProfile[]>("/business-profiles");
   const profile = profiles[0];

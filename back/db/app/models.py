@@ -142,6 +142,40 @@ class SupportProgram(Base):
     )
 
 
+class DeductionCandidate(Base):
+    __tablename__ = "deduction_candidates"
+
+    id: Mapped[str] = mapped_column(Text, primary_key=True)
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str] = mapped_column(Text, nullable=False)
+    calculation_type: Mapped[str] = mapped_column(Text, nullable=False)
+    target_industry: Mapped[str | None] = mapped_column(Text, nullable=True)
+    required_inputs: Mapped[str] = mapped_column(Text, nullable=False)
+    source: Mapped[str] = mapped_column(Text, nullable=False)
+    source_section: Mapped[str] = mapped_column(Text, nullable=False)
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+
+class FundingCandidate(Base):
+    __tablename__ = "funding_candidates"
+
+    id: Mapped[str] = mapped_column(Text, primary_key=True)
+    title: Mapped[str] = mapped_column(Text, nullable=False)
+    funding_type: Mapped[str] = mapped_column(Text, nullable=False)
+    max_amount: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    eligible: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    source: Mapped[str] = mapped_column(Text, nullable=False)
+    annual_rate: Mapped[Decimal | None] = mapped_column(Numeric(8, 6), nullable=True)
+    term_months: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    grace_months: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    guarantee_fee_rate: Mapped[Decimal | None] = mapped_column(Numeric(8, 6), nullable=True)
+    expected_period_weeks: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    region_name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    target_industry: Mapped[str | None] = mapped_column(Text, nullable=True)
+    funding_purpose: Mapped[str | None] = mapped_column(Text, nullable=True)
+    terms_note: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
 class FundingRequest(Base):
     __tablename__ = "funding_requests"
 

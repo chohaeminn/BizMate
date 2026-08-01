@@ -1094,6 +1094,76 @@
   width: 100%;
 }
 
+.portfolio-funding-legend {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.05);
+  padding: 18px;
+  width: 100%;
+}
+
+.portfolio-funding-legend-heading h2 {
+  color: #111827;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+}
+
+.portfolio-funding-legend-heading p {
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 17px;
+  margin: 2px 0 14px;
+}
+
+.portfolio-funding-legend-grid {
+  display: grid;
+  gap: 10px 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.portfolio-funding-legend-item {
+  align-items: center;
+  background: #f9fafb;
+  border-radius: 10px;
+  display: flex;
+  gap: 9px;
+  min-width: 0;
+  padding: 9px 10px;
+}
+
+.portfolio-funding-legend-item > span {
+  background: var(--legend-color);
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 1px rgba(17, 24, 39, 0.08);
+  flex: 0 0 auto;
+  height: 14px;
+  width: 14px;
+}
+
+.portfolio-funding-legend-item div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.portfolio-funding-legend-item strong {
+  color: #1f2937;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.portfolio-funding-legend-item small {
+  color: #9ca3af;
+  font-size: 9px;
+  line-height: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .portfolio-result-card {
   background: rgba(249, 250, 251, 0.5);
   border: 1px solid var(--line-light);
@@ -1942,4 +2012,51 @@
   font-size: 11px;
   line-height: 17px;
   margin: 4px 0 0;
+}
+
+.portfolio-result-loading,
+.portfolio-result-error {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #eef0f3;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 220px;
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.portfolio-result-loading strong {
+  color: #333;
+  font-size: 15px;
+  margin-top: 18px;
+}
+
+.portfolio-result-loading p {
+  color: #9ca3af;
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+
+.portfolio-result-spinner {
+  animation: portfolio-spin 0.9s linear infinite;
+  border: 4px solid #fff3bf;
+  border-radius: 50%;
+  border-top-color: #ffcc00;
+  height: 42px;
+  width: 42px;
+}
+
+.portfolio-result-error {
+  color: #dc2626;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+@keyframes portfolio-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

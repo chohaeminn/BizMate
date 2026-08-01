@@ -17,6 +17,7 @@ FundingType = Literal[
     "grant",
     "policy_loan",
     "commercial_loan",
+    "guarantee_loan",
     "self_funding",
 ]
 
@@ -542,6 +543,7 @@ def calculate_item(
     if item.funding_type not in {
         "policy_loan",
         "commercial_loan",
+        "guarantee_loan",
     }:
 
         raise PortfolioCalculationError(

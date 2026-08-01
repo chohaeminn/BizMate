@@ -416,8 +416,11 @@ class PortfolioService:
     @staticmethod
     def _loan_funding_type(
         loan_type: str,
-    ) -> Literal["policy_loan", "commercial_loan"]:
+    ) -> Literal["policy_loan", "commercial_loan", "guarantee_loan"]:
         normalized = loan_type.strip().lower()
+
+        if normalized in {"guarantee", "guarantee_loan", "보증", "보증대출"}:
+            return "guarantee_loan"
 
         policy_keywords = {
             "policy",
@@ -447,6 +450,7 @@ class PortfolioService:
             if item.funding_type not in {
                 "policy_loan",
                 "commercial_loan",
+                "guarantee_loan",
             }:
                 continue
 
@@ -510,6 +514,7 @@ class _ResolvedSelection:
         "grant",
         "policy_loan",
         "commercial_loan",
+        "guarantee_loan",
         "self_funding",
     ]
     amount: int

@@ -38,12 +38,12 @@ export default function TaxSavingGuideDetailPage() {
   const [result, setResult] = useState<AiOutput | null>(null);
 
   useEffect(() => {
-    const cached = window.sessionStorage.getItem("bizmate-tax-guide-v4");
+    const cached = window.sessionStorage.getItem("bizmate-tax-guide-v6");
     if (!cached) return;
     try {
       setResult(parseOutput((JSON.parse(cached) as CachedGuide).output));
     } catch {
-      window.sessionStorage.removeItem("bizmate-tax-guide-v4");
+      window.sessionStorage.removeItem("bizmate-tax-guide-v6");
     }
   }, []);
 

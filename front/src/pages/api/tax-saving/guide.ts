@@ -18,6 +18,15 @@ type TaxSchedule = {
   schedule_date: string;
 };
 
+type TaxInputRecord = {
+  period_start: string;
+  period_end: string;
+  amount_basis: string;
+  sales_amount: number;
+  purchase_amount: number;
+  simulation_tax_rate: number;
+};
+
 async function backendRequest<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${backendApiUrl}${path}`, init);
   if (!response.ok) throw new Error(`백엔드 API 요청 실패 (${response.status})`);
@@ -28,26 +37,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    const [profiles, schedules] = await Promise.all([
-      backendRequest<BusinessProfile[]>("/business-profiles"),
+    const profileId = req.cookies.bizmate_profile_id;
+    if (!profileId) return res.status(400).json({ error: "페르소나를 먼저 선택해 주세요." });
+    const [profile, schedules, storedTaxInput] = await Promise.all([
+      backendRequest<BusinessProfile>(`/business-profiles/${encodeURIComponent(profileId)}`),
       backendRequest<TaxSchedule[]>("/tax-schedules?year=2026"),
+      backendRequest<TaxInputRecord>(`/tax-inputs/latest?profile_id=${encodeURIComponent(profileId)}`),
     ]);
-    const profile = profiles[0];
-    if (!profile) return res.status(404).json({ error: "사업자 정보가 없습니다." });
 
     const vatSchedule = schedules.find((schedule) =>
       schedule.title.includes("2026.1기 부가가치세 확정신고"),
     ) ?? null;
 
-    const salesAmount = 152_000_000;
-    const purchaseAmount = 84_200_000;
     const taxInput = {
-      period_start: "2026-01-01",
-      period_end: "2026-06-30",
-      amount_basis: "SUPPLY_VALUE",
-      sales_amount: salesAmount,
-      purchase_amount: purchaseAmount,
-      simulation_tax_rate: 0.15,
+      period_start: storedTaxInput.period_start,
+      period_end: storedTaxInput.period_end,
+      amount_basis: storedTaxInput.amount_basis,
+      sales_amount: storedTaxInput.sales_amount,
+      purchase_amount: storedTaxInput.purchase_amount,
+      simulation_tax_rate: storedTaxInput.simulation_tax_rate,
       deduction_inputs: {
         yellow_umbrella: {
           monthly_payment: 300_000,
@@ -86,6 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       tax_input: taxInput,
       tax_summary: engineResponse.tax_summary,
       deduction_candidates: engineResponse.deduction_candidates,
+      analysis_date: new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" }),
     });
   } catch (error) {
     console.error("tax-saving-ai 가이드 생성 실패:", error);

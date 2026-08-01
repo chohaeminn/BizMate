@@ -117,15 +117,17 @@
 }
 
 .deadline-badge {
+  align-items: center;
   background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  min-width: 70px;
-  padding: 9px;
-  position: absolute;
-  right: 24px;
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 16px;
+  min-width: 86px;
+  padding: 8px 12px;
+  position: static;
   text-align: center;
-  top: 24px;
 }
 
 .deadline-badge span {
@@ -138,8 +140,9 @@
 .deadline-badge strong {
   color: #ef4444;
   display: block;
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 16px;
+  line-height: 24px;
+  overflow-wrap: anywhere;
 }
 
 .hero-star {
@@ -424,12 +427,14 @@
 
 .detail-star-icon {
   align-items: center;
+  color: #1a1a1a;
   display: flex;
-  filter: grayscale(1) brightness(0.25);
+  font-size: 23px;
+  line-height: 1;
 }
 
 .detail-interest-button.active .detail-star-icon {
-  filter: none;
+  color: #ffcc00;
 }
 
 .detail-apply-button {

@@ -184,13 +184,13 @@ export default function LandingPage() {
 
         <div className="sticky-cta">
           <Link
-            href="/service"
+            href="/persona"
             aria-label={isAnalyzing ? "자금관리 분석 중" : "내 자금관리 분석 시작하기"}
             aria-busy={isAnalyzing}
             onClick={() => setIsAnalyzing(true)}
           >
             <Image src="/landing/cta.svg" alt="" width={18} height={18} />
-            <span>{isAnalyzing ? "분석 중..." : "내 자금관리 분석 시작하기"}</span>
+            <span>{isAnalyzing ? "페르소나 불러오는 중..." : "내 자금관리 분석 시작하기"}</span>
           </Link>
         </div>
       </div>

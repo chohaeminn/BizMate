@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { loadPortfolioFlowInput } from "@/lib/portfolioSession";
 import {
   getDonutBackground,
@@ -34,8 +34,11 @@ export default function PortfolioResultPage() {
   const [disclaimer, setDisclaimer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const requestStarted = useRef(false);
 
   useEffect(() => {
+    if (requestStarted.current) return;
+    requestStarted.current = true;
     const input = loadPortfolioFlowInput();
     const cacheKey = `bizmate-portfolio-result-v3:${JSON.stringify(input)}`;
     const cached = window.sessionStorage.getItem(cacheKey);
@@ -75,7 +78,10 @@ export default function PortfolioResultPage() {
       body: JSON.stringify(input),
     })
       .then(async (response) => {
-        if (!response.ok) throw new Error(`portfolio_llm 호출 실패 (${response.status})`);
+        if (!response.ok) {
+          const body = await response.json().catch(() => null) as { error?: string } | null;
+          throw new Error(body?.error || `portfolio_llm 호출 실패 (${response.status})`);
+        }
         return response.json() as Promise<{
           output: string;
           calculations: Parameters<typeof mergePortfolioLlmOutput>[1];
@@ -83,6 +89,7 @@ export default function PortfolioResultPage() {
       })
       .then(({ output, calculations }) => {
         window.sessionStorage.setItem(cacheKey, JSON.stringify({ output, calculations }));
+        setErrorMessage("");
         applyOutput(output, calculations);
       })
       .catch((error) => {

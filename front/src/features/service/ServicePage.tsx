@@ -184,10 +184,6 @@ export default function ServicePage({ programs, profile, recommendationSummary }
                       <strong>{recommendation.supportAmountLabel}</strong>
                     </div>
                     <div>
-                      <span>금리(예상)</span>
-                      <strong>{recommendation.estimatedRateLabel ?? "-"}</strong>
-                    </div>
-                    <div>
                       <span>신청마감</span>
                       <strong className="deadline">{recommendation.deadlineLabel}</strong>
                     </div>

@@ -9,9 +9,11 @@ export default function DaeguSpecialGuaranteePage({ program }: Props) {
   return <SupportProgramDetailPage program={program} />;
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => {
   try {
-    const { programs: [program] } = await getPersonalizedSupportPrograms();
+    const profileId = req.cookies.bizmate_profile_id;
+    if (!profileId) return { redirect: { destination: "/persona", permanent: false } };
+    const { programs: [program] } = await getPersonalizedSupportPrograms(profileId);
     return program ? { props: { program } } : { notFound: true };
   } catch (error) {
     console.error("지원사업 상세 조회 실패:", error);

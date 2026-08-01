@@ -16,6 +16,7 @@ import "@/styles/support-program-apply-complete.css";
 import "@/styles/support-program-apply-status.css";
 import "@/styles/support-program-apply-consult.css";
 import "@/styles/support-program-apply-consult-complete.css";
+import "@/styles/persona.css";
 
 export default function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;

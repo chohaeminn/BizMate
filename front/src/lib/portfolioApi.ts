@@ -45,7 +45,10 @@ export type PortfolioContext = {
 
 async function backendRequest<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${backendApiUrl}${path}`, init);
-  if (!response.ok) throw new Error(`백엔드 API 요청 실패 (${response.status})`);
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(`백엔드 API 요청 실패 (${response.status}): ${detail}`);
+  }
   return response.json() as Promise<T>;
 }
 
@@ -86,11 +89,13 @@ export async function savePortfolio(payload: Record<string, unknown>) {
   });
 }
 
-export async function getLatestPortfolioContext(): Promise<PortfolioContext> {
+export async function getLatestPortfolioContext(profileId?: string): Promise<PortfolioContext> {
+  if (profileId) {
+    return backendRequest<PortfolioContext>(`/portfolios/context/${encodeURIComponent(profileId)}`);
+  }
   const profiles = await backendRequest<BusinessProfile[]>("/business-profiles");
-  const profile = profiles[0];
-  if (!profile) throw new Error("등록된 사업자 프로필이 없습니다.");
-  return backendRequest<PortfolioContext>(`/portfolios/context/${profile.id}`);
+  if (!profiles[0]) throw new Error("등록된 사업자 프로필이 없습니다.");
+  return backendRequest<PortfolioContext>(`/portfolios/context/${profiles[0].id}`);
 }
 
 export async function invokePortfolioLlm(content: string) {

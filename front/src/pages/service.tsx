@@ -31,7 +31,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res }
       );
     }
 
-    const { summary, ...result } = await getAiPersonalizedSupportPrograms(sessionId);
+    const profileId = req.cookies.bizmate_profile_id;
+    if (!profileId) {
+      return { redirect: { destination: "/persona", permanent: false } };
+    }
+    const { summary, ...result } = await getAiPersonalizedSupportPrograms(sessionId, profileId);
     return { props: { ...result, recommendationSummary: summary } };
   } catch (error) {
     console.error("support_llm 지원사업 추천 조회 실패:", error);

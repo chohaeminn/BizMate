@@ -339,7 +339,7 @@
 .recommend-metrics {
   border-top: 1px solid var(--line-light);
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   padding-top: 13px;
 }
 
@@ -349,6 +349,15 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  padding: 0 8px;
+}
+
+.recommend-metrics div:first-child {
+  padding-left: 0;
+}
+
+.recommend-metrics div:last-child {
+  padding-right: 0;
 }
 
 .recommend-metrics div:last-child {

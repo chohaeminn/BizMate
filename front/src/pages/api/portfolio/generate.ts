@@ -56,18 +56,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    const context = await getLatestPortfolioContext();
+    const profileId = req.cookies.bizmate_profile_id;
+    if (!profileId) return res.status(400).json({ error: "페르소나를 먼저 선택해 주세요." });
+    const context = await getLatestPortfolioContext(profileId);
     const requiredAmount = parseWon(req.body.requiredAmount);
     if (requiredAmount <= 0 || !String(req.body.fundingPurpose ?? "").trim()) {
       return res.status(400).json({ error: "필요 금액과 자금 사용 목적을 입력해 주세요." });
     }
 
     const previousRequest = context.funding_request;
+    const selfFundingAmount = previousRequest?.self_funding_amount ?? 0;
     const fundingRequest = await createFundingRequest({
       profile_id: context.profile.id,
       required_amount: requiredAmount,
       funding_purpose: String(req.body.fundingPurpose).trim().slice(0, 50),
-      self_funding_amount: previousRequest?.self_funding_amount ?? 0,
+      self_funding_amount: selfFundingAmount,
       max_monthly_payment: previousRequest?.max_monthly_payment ?? 0,
       optimization_priority: String(req.body.preference ?? "cost"),
     });
@@ -93,20 +96,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const candidateSourceTypes = new Map<string, string>();
     const candidateIdsByName = new Map<string, string>();
+    const candidateMaxAmounts = new Map<string, number>();
     for (const key of ["support_program_candidates", "loan_product_candidates"] as const) {
       const list = candidates[key] as Array<{
         candidate_id: string;
         source_type: string;
         name?: string;
+        max_amount?: number | null;
       }> | undefined;
       for (const candidate of list ?? []) {
         candidateSourceTypes.set(candidate.candidate_id, candidate.source_type);
+        if (typeof candidate.max_amount === "number" && candidate.max_amount > 0) {
+          candidateMaxAmounts.set(candidate.candidate_id, candidate.max_amount);
+        }
         if (candidate.name) candidateIdsByName.set(candidate.name.trim(), candidate.candidate_id);
       }
     }
 
     const calculations = await Promise.all(portfolios.map(async (portfolio) => {
-      const items = (portfolio.items ?? []).map((item) => {
+      let usedSelfFunding = 0;
+      const items = (portfolio.items ?? []).flatMap((item) => {
         const rawId = item.candidate_id ?? item.source_id ?? null;
         const itemName = String(item.name ?? item.item_name ?? "").trim();
         const isSelfFunding = item.source_type === "self_funding"
@@ -119,14 +128,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           : candidateSourceTypes.has(String(rawId))
             ? String(rawId)
             : candidateIdsByName.get(itemName);
-        return {
+        const requestedAmount = Math.max(0, Math.round(Number(item.allocated_amount) || 0));
+        if (requestedAmount === 0) return [];
+        const candidateMax = sourceId ? candidateMaxAmounts.get(sourceId) : undefined;
+        let amount = candidateMax ? Math.min(requestedAmount, candidateMax) : requestedAmount;
+        if (isSelfFunding) {
+          const remaining = Math.max(0, selfFundingAmount - usedSelfFunding);
+          amount = Math.min(amount, remaining);
+          usedSelfFunding += amount;
+        }
+        if (amount <= 0) return [];
+        return [{
           source_type: isSelfFunding ? "self_funding" : candidateSourceTypes.get(sourceId ?? ""),
           source_id: sourceId,
-          amount: Number(item.allocated_amount),
+          amount,
           reason: item.reason ?? portfolio.recommendation_reason,
-          priority_order: Number(item.priority_order),
-        };
+          priority_order: Math.max(1, Math.round(Number(item.priority_order) || 1)),
+        }];
       });
+      if (!items.length) throw new Error(`${portfolio.type} 포트폴리오에 계산 가능한 금액이 없습니다.`);
       if (items.some((item) => !item.source_type)) {
         throw new Error("AI가 DB 후보에 없는 candidate_id를 반환했습니다.");
       }

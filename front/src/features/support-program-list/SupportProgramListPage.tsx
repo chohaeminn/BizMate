@@ -35,10 +35,6 @@ export default function SupportProgramListPage({ programs, profile }: SupportPro
                 <strong>{program.supportAmountLabel}</strong>
               </div>
               <div>
-                <span>예상금리</span>
-                <strong>{program.estimatedRateLabel ?? "-"}</strong>
-              </div>
-              <div>
                 <span>신청마감</span>
                 <strong className="deadline">{program.deadlineLabel}</strong>
               </div>

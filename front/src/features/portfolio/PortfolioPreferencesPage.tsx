@@ -27,16 +27,17 @@ const fundingOptions: Array<{
   },
 ];
 
-const repaymentOptions = [
-  { label: "보수적", value: "70만 원" },
-  { label: "권장", value: "90만 원", selected: true },
-  { label: "최대", value: "110만 원" },
-];
-
 const formatWon = (value: number) => `${Math.round(value / 10_000).toLocaleString("ko-KR")}만 원`;
+const roundRepayment = (value: number) => Math.max(100_000, Math.round(value / 100_000) * 100_000);
 
 export default function PortfolioPreferencesPage({ context }: { context: PortfolioContext }) {
   const [selectedFunding, setSelectedFunding] = useState(() => loadPortfolioFlowInput().preference);
+  const recommendedRepayment = context.funding_request?.max_monthly_payment || 900_000;
+  const repaymentOptions = [
+    { label: "보수적", value: formatWon(roundRepayment(recommendedRepayment * 0.8)) },
+    { label: "권장", value: formatWon(recommendedRepayment), selected: true },
+    { label: "최대", value: formatWon(roundRepayment(recommendedRepayment * 1.2)) },
+  ];
   const currentFunds = [
     { label: "현재 가용잔액", value: formatWon(context.profile.available_cash_amount ?? 0) },
     { label: "향후 30일 예정지출", value: formatWon(context.profile.monthly_fixed_expense ?? 0) },
@@ -158,7 +159,7 @@ export default function PortfolioPreferencesPage({ context }: { context: Portfol
             <div className="portfolio-repayment-message">
               <div className="portfolio-preferences-robot">
                 <Image
-                  src="/portfolio/portfolio-preferences-robot.png"
+                  src="/portfolio/portfolio-robot.png"
                   alt=""
                   width={50}
                   height={68}
@@ -168,7 +169,7 @@ export default function PortfolioPreferencesPage({ context }: { context: Portfol
               <p>
                 현재 현금흐름 기준 권장 월 상환액은
                 <br />
-                90만 원이에요.
+                {formatWon(recommendedRepayment)}이에요.
               </p>
             </div>
           </section>

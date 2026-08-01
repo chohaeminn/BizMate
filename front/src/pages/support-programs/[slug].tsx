@@ -11,10 +11,12 @@ export default function SupportProgramPage({ program }: SupportProgramPageProps)
   return <SupportProgramDetailPage program={program} />;
 }
 
-export const getServerSideProps: GetServerSideProps<SupportProgramPageProps> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<SupportProgramPageProps> = async ({ params, req }) => {
   const slug = String(params?.slug ?? "");
   try {
-    const { programs } = await getPersonalizedSupportPrograms();
+    const profileId = req.cookies.bizmate_profile_id;
+    if (!profileId) return { redirect: { destination: "/persona", permanent: false } };
+    const { programs } = await getPersonalizedSupportPrograms(profileId);
     const program = programs.find((item) => item.id === slug) ?? await getSupportProgram(slug);
     return { props: { program } };
   } catch (error) {

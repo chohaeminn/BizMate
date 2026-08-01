@@ -17,6 +17,15 @@ export default function SupportProgramDetailPage({ program }: SupportProgramDeta
   });
 
   useEffect(() => {
+    try {
+      const interested = JSON.parse(window.localStorage.getItem("bizmate-interested-programs") ?? "[]") as string[];
+      setIsInterested(interested.includes(program.id));
+    } catch {
+      window.localStorage.removeItem("bizmate-interested-programs");
+    }
+  }, [program.id]);
+
+  useEffect(() => {
     const stored = window.sessionStorage.getItem(`bizmate-support-analysis:${program.id}`);
     if (!stored) return;
 
@@ -49,7 +58,18 @@ export default function SupportProgramDetailPage({ program }: SupportProgramDeta
   }, [showInterestModal]);
 
   const handleInterestClick = () => {
-    setIsInterested(true);
+    const nextInterested = !isInterested;
+    setIsInterested(nextInterested);
+    let interested: string[] = [];
+    try {
+      interested = JSON.parse(window.localStorage.getItem("bizmate-interested-programs") ?? "[]") as string[];
+    } catch {
+      interested = [];
+    }
+    const next = nextInterested
+      ? [...new Set([...interested, program.id])]
+      : interested.filter((id) => id !== program.id);
+    window.localStorage.setItem("bizmate-interested-programs", JSON.stringify(next));
     setShowInterestModal(true);
   };
 
@@ -197,7 +217,7 @@ export default function SupportProgramDetailPage({ program }: SupportProgramDeta
             aria-pressed={isInterested}
           >
             <span className="detail-star-icon" aria-hidden="true">
-              <Image src="/support-program-detail/detail-star.svg" alt="" width={18} height={20} />
+              {isInterested ? "★" : "☆"}
             </span>
             관심사업 등록
           </button>
@@ -209,7 +229,7 @@ export default function SupportProgramDetailPage({ program }: SupportProgramDeta
 
         {showInterestModal ? (
           <div className="interest-toast-modal" role="status" aria-live="polite">
-            관심사업으로 등록했어요
+            {isInterested ? "관심사업으로 등록했어요" : "관심사업 등록을 해제했어요"}
           </div>
         ) : null}
       </div>

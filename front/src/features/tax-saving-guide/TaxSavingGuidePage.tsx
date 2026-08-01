@@ -45,6 +45,7 @@ type TaxAiOutput = {
 type GuideApiResponse = {
   output: string;
   tax_schedule: { title: string; note: string | null; schedule_date: string } | null;
+  analysis_date?: string;
 };
 
 function parseAiOutput(output: string): TaxAiOutput {
@@ -86,12 +87,13 @@ function formatMissingInput(value: string) {
 export default function TaxSavingGuidePage() {
   const [result, setResult] = useState<TaxAiOutput | null>(null);
   const [schedule, setSchedule] = useState<GuideApiResponse["tax_schedule"]>(null);
+  const [analysisDate, setAnalysisDate] = useState<string>();
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
   const loadGuide = async (force = false) => {
     if (isRefreshing && force) return;
-    const cacheKey = "bizmate-tax-guide-v4";
+    const cacheKey = "bizmate-tax-guide-v6";
     if (!force) {
       const cached = window.sessionStorage.getItem(cacheKey);
       if (cached) {
@@ -99,6 +101,7 @@ export default function TaxSavingGuidePage() {
           const parsed = JSON.parse(cached) as GuideApiResponse;
           setResult(parseAiOutput(parsed.output));
           setSchedule(parsed.tax_schedule);
+          setAnalysisDate(parsed.analysis_date);
           setIsRefreshing(false);
           return;
         } catch {
@@ -121,6 +124,7 @@ export default function TaxSavingGuidePage() {
       window.sessionStorage.setItem(cacheKey, JSON.stringify(data));
       setResult(output);
       setSchedule(data.tax_schedule);
+      setAnalysisDate(data.analysis_date);
     } catch (error) {
       console.error(error);
       setErrorMessage("AI 절세 가이드를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.");
@@ -184,7 +188,7 @@ export default function TaxSavingGuidePage() {
             </div>
             <div className="tax-guide-date">
               <Image src="/tax-saving/tax-guide-calendar.svg" alt="" width={14} height={16} />
-              <strong>{formatPeriod(schedule?.schedule_date)}</strong>
+              <strong>{formatPeriod(analysisDate ?? schedule?.schedule_date)}</strong>
             </div>
           </section>
 
@@ -210,7 +214,7 @@ export default function TaxSavingGuidePage() {
           <section className="tax-guide-estimate" aria-labelledby="tax-estimate-title">
             <div className="tax-guide-estimate-heading">
               <div><h2 id="tax-estimate-title">실시간 예상 세액</h2><button className={`tax-guide-live-button ${isRefreshing ? "loading" : ""}`} type="button" onClick={() => void loadGuide(true)} disabled={isRefreshing}>AI로 업데이트<i /></button></div>
-              <p>{formatPeriod(schedule?.schedule_date)}</p>
+              <p>{formatPeriod(analysisDate ?? schedule?.schedule_date)}</p>
             </div>
             {errorMessage ? <p className="tax-guide-error" role="alert">{errorMessage}</p> : null}
             <div className="tax-guide-result-only"><div className="tax-guide-donut" aria-label={`예상 납부 세액 ${formatWon(estimate?.estimated_payable_tax)}`}><div className="tax-guide-donut-hole"><span>예상 납부 세액</span><strong>{formatWon(estimate?.estimated_payable_tax)}</strong><p>{comparison}</p></div></div></div>

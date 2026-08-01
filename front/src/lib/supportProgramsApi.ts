@@ -128,7 +128,10 @@ export async function getBusinessProfiles(): Promise<BusinessProfile[]> {
   return request<BusinessProfile[]>("/business-profiles");
 }
 
-export async function getLatestBusinessProfile(): Promise<BusinessProfile | null> {
+export async function getLatestBusinessProfile(profileId?: string): Promise<BusinessProfile | null> {
+  if (profileId) {
+    return request<BusinessProfile>(`/business-profiles/${encodeURIComponent(profileId)}`);
+  }
   const profiles = await getBusinessProfiles();
   return profiles[0] ?? null;
 }
@@ -142,11 +145,11 @@ export async function getRecommendations(businessId: string): Promise<SupportPro
   );
 }
 
-export async function getPersonalizedSupportPrograms(): Promise<{
+export async function getPersonalizedSupportPrograms(profileId?: string): Promise<{
   profile: BusinessProfile | null;
   programs: SupportProgram[];
 }> {
-  const profile = await getLatestBusinessProfile();
+  const profile = await getLatestBusinessProfile(profileId);
   if (!profile) return { profile: null, programs: [] };
   return { profile, programs: await getRecommendations(profile.id) };
 }
@@ -213,8 +216,9 @@ async function generateAiPersonalizedSupportPrograms(
 
 export async function getAiPersonalizedSupportPrograms(
   cacheScope = "shared",
+  profileId?: string,
 ): Promise<AiPersonalizedResult> {
-  const profile = await getLatestBusinessProfile();
+  const profile = await getLatestBusinessProfile(profileId);
 
   if (!profile) return { profile: null, programs: [], summary: null };
   const [rawPrograms, backendRecommendations] = await Promise.all([

@@ -837,15 +837,18 @@
   flex: 0 0 auto;
   height: 68px;
   overflow: hidden;
+  position: relative;
   width: 50px;
 }
 
 .portfolio-preferences-robot img {
-  height: 68px;
-  object-fit: cover;
-  object-position: center;
-  transform: scale(1.7);
-  width: 50px;
+  height: 150px;
+  left: 0;
+  max-width: none;
+  object-fit: fill;
+  position: absolute;
+  top: 0;
+  width: 100px;
 }
 
 .portfolio-repayment-message p {
@@ -1265,7 +1268,7 @@
 }
 
 .portfolio-result-segment {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   gap: 10px;
   justify-content: space-between;
@@ -1280,7 +1283,10 @@
   gap: 8px;
   line-height: 16.5px;
   min-width: 0;
-  white-space: nowrap;
+  flex: 1 1 auto;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 .portfolio-result-segment span::before {

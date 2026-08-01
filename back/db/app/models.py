@@ -741,3 +741,30 @@ class TaxSchedule(Base):
         nullable=False,
         default=datetime.now,
     )
+
+
+class TaxInputRecord(Base):
+    __tablename__ = "tax_inputs"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4,
+    )
+    profile_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("business_profiles.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    period_start: Mapped[date] = mapped_column(Date, nullable=False)
+    period_end: Mapped[date] = mapped_column(Date, nullable=False)
+    amount_basis: Mapped[str] = mapped_column(
+        String(30), nullable=False, default="SUPPLY_VALUE",
+    )
+    sales_amount: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    purchase_amount: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    simulation_tax_rate: Mapped[Decimal] = mapped_column(
+        Numeric(8, 6), nullable=False, default=Decimal("0.15"),
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now,
+    )

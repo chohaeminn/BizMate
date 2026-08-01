@@ -49,6 +49,7 @@ export default function TaxSavingPage() {
   const [yearSchedules, setYearSchedules] = useState<TaxSchedule[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showAllUpcoming, setShowAllUpcoming] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -100,6 +101,9 @@ export default function TaxSavingPage() {
   const nextSchedule = upcomingSchedules.find((schedule) => schedule.title.includes("부가가치세"))
     ?? upcomingSchedules[0]
     ?? null;
+  const visibleUpcomingSchedules = showAllUpcoming
+    ? upcomingSchedules
+    : upcomingSchedules.slice(0, 2);
 
   const moveMonth = (offset: number) => {
     const next = new Date(displayMonth.getFullYear(), displayMonth.getMonth() + offset, 1);
@@ -227,7 +231,7 @@ export default function TaxSavingPage() {
           <section className="tax-upcoming" aria-labelledby="tax-upcoming-title">
             <h2 id="tax-upcoming-title">다가오는 세무 일정</h2>
             <div className="tax-upcoming-scroll">
-              {upcomingSchedules.map((item) => (
+              {visibleUpcomingSchedules.map((item) => (
                 <article className="tax-upcoming-card" key={item.id}>
                   <div className="tax-upcoming-top">
                     <span className="red">{getDday(item.schedule_date, today)}</span>
@@ -239,6 +243,11 @@ export default function TaxSavingPage() {
               ))}
               {!isLoading && !upcomingSchedules.length ? <p className="tax-empty-schedule">다가오는 일정이 없습니다.</p> : null}
             </div>
+            {upcomingSchedules.length > 2 ? (
+              <button className="tax-upcoming-more" type="button" onClick={() => setShowAllUpcoming((current) => !current)} aria-expanded={showAllUpcoming}>
+                {showAllUpcoming ? "접기" : `일정 ${upcomingSchedules.length - 2}개 더보기`}
+              </button>
+            ) : null}
           </section>
         </div>
       </div>

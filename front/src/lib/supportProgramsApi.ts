@@ -205,7 +205,9 @@ async function generateAiPersonalizedSupportPrograms(
   return { profile, programs, summary: aiOutput.summary || null };
 }
 
-export async function getAiPersonalizedSupportPrograms(): Promise<AiPersonalizedResult> {
+export async function getAiPersonalizedSupportPrograms(
+  cacheScope = "shared",
+): Promise<AiPersonalizedResult> {
   const [profile, rawPrograms] = await Promise.all([
     getLatestBusinessProfile(),
     request<SupportProgramApiResponse[]>("/support-programs"),
@@ -214,6 +216,7 @@ export async function getAiPersonalizedSupportPrograms(): Promise<AiPersonalized
   if (!profile) return { profile: null, programs: [], summary: null };
 
   const cacheKey = JSON.stringify({
+    cacheScope,
     profile: {
       id: profile.id,
       region_name: profile.region_name,

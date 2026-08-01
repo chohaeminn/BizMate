@@ -1,4 +1,5 @@
 import type { GetServerSideProps } from "next";
+import { randomUUID } from "crypto";
 import ServicePage from "@/features/service/ServicePage";
 import type { BusinessProfile, SupportProgram } from "@/data/supportPrograms";
 import { getAiPersonalizedSupportPrograms } from "@/lib/supportProgramsApi";
@@ -19,9 +20,18 @@ export default function Service({ programs, profile, recommendationSummary }: Pr
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res }) => {
   try {
-    const { summary, ...result } = await getAiPersonalizedSupportPrograms();
+    const sessionCookie = req.cookies.bizmate_session_id;
+    const sessionId = sessionCookie || randomUUID();
+    if (!sessionCookie) {
+      res.setHeader(
+        "Set-Cookie",
+        `bizmate_session_id=${sessionId}; Path=/; HttpOnly; SameSite=Lax`,
+      );
+    }
+
+    const { summary, ...result } = await getAiPersonalizedSupportPrograms(sessionId);
     return { props: { ...result, recommendationSummary: summary } };
   } catch (error) {
     console.error("support_llm 지원사업 추천 조회 실패:", error);

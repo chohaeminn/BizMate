@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 const trustBadges = [
   {
@@ -63,6 +64,8 @@ const stats = [
 ];
 
 export default function LandingPage() {
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
   return (
     <main className="landing">
       <div className="mobile-screen">
@@ -180,9 +183,14 @@ export default function LandingPage() {
         </div>
 
         <div className="sticky-cta">
-          <Link href="/service" aria-label="내 자금관리 분석 시작하기">
+          <Link
+            href="/service"
+            aria-label={isAnalyzing ? "자금관리 분석 중" : "내 자금관리 분석 시작하기"}
+            aria-busy={isAnalyzing}
+            onClick={() => setIsAnalyzing(true)}
+          >
             <Image src="/landing/cta.svg" alt="" width={18} height={18} />
-            <span>내 자금관리 분석 시작하기</span>
+            <span>{isAnalyzing ? "분석 중..." : "내 자금관리 분석 시작하기"}</span>
           </Link>
         </div>
       </div>

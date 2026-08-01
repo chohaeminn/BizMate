@@ -67,6 +67,22 @@ function formatPeriod(date?: string) {
   return `${year}년 ${Number(month)}월 기준`;
 }
 
+const missingInputLabels: Record<string, string> = {
+  eligible_card_purchase_amount: "공제 가능한 카드 매입 공급가액",
+  vat_amount: "부가가치세액",
+  business_card_registered: "사업용 신용카드 등록 여부",
+  eligible_purchase_supply_amount: "공제 가능한 매입 공급가액",
+  purchase_vat_amount: "매입 부가가치세액",
+  tax_invoice_received: "세금계산서 수취 여부",
+  bad_debt_amount: "대손 금액",
+  bad_debt_confirmed: "대손 확정 여부",
+  vat_reported: "부가가치세 신고 여부",
+};
+
+function formatMissingInput(value: string) {
+  return missingInputLabels[value] ?? value.replaceAll("_", " ");
+}
+
 export default function TaxSavingGuidePage() {
   const [result, setResult] = useState<TaxAiOutput | null>(null);
   const [schedule, setSchedule] = useState<GuideApiResponse["tax_schedule"]>(null);
@@ -151,6 +167,16 @@ export default function TaxSavingGuidePage() {
         </header>
 
         <div className="tax-guide-content">
+          {isRefreshing && !result ? (
+            <section className="tax-guide-loading" role="status" aria-live="polite">
+              <div className="tax-guide-loading-icon"><Image src="/tax-saving/tax-guide-robot.svg" alt="" width={46} height={46} /></div>
+              <div>
+                <strong>AI 결과 업데이트 중</strong>
+                <p>사업자 정보와 공제 후보를 분석하고 있어요.<br />잠시만 기다려 주세요.</p>
+              </div>
+              <span className="tax-guide-loading-dots" aria-hidden="true"><i /><i /><i /></span>
+            </section>
+          ) : null}
           <section className="tax-guide-title" aria-labelledby="tax-guide-title">
             <div>
               <h2 id="tax-guide-title">AI 절세 추천</h2>
@@ -191,7 +217,12 @@ export default function TaxSavingGuidePage() {
             <div className="tax-guide-breakdown">{breakdownItems.map((item) => <div className="tax-guide-breakdown-row" key={item.label}><span><i className={item.tone} />{item.label}</span><strong>{item.amount}</strong></div>)}</div>
             <aside className="tax-guide-ai-tip"><div><p>AI 추천 검토 시</p><strong>예상 <span>{formatWon(expectedSaving)}</span> 절세 가능</strong></div><div className="tax-guide-robot"><Image src="/tax-saving/tax-guide-robot.svg" alt="" width={40} height={40} /></div></aside>
             {(result?.guide_messages ?? (result?.tax_guide_message ? [result.tax_guide_message] : [])).map((message) => <p className="tax-guide-message" key={message}>{message}</p>)}
-            {result?.missing_inputs?.length ? <p className="tax-guide-missing">추가 확인 필요: {result.missing_inputs.join(", ")}</p> : null}
+            {result?.missing_inputs?.length ? (
+              <aside className="tax-guide-missing">
+                <strong>추가 정보가 있으면 더 정확하게 분석할 수 있어요</strong>
+                <p>{result.missing_inputs.map(formatMissingInput).join(" · ")}</p>
+              </aside>
+            ) : null}
             {result?.disclaimer ? <p className="tax-guide-disclaimer">{result.disclaimer}</p> : null}
           </section>
 

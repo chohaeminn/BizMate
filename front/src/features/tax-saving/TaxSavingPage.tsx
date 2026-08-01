@@ -139,7 +139,7 @@ export default function TaxSavingPage() {
                 <div className="tax-dday-metrics tax-dday-db-source">
                   <div>
                     <span>일정 기준</span>
-                    <strong>DB 세무일정</strong>
+                    <strong>세무일정</strong>
                   </div>
                 </div>
               </div>
@@ -200,7 +200,7 @@ export default function TaxSavingPage() {
               })}
             </div>
 
-            <div className="tax-legend"><span><i className="red" />DB 세무일정</span></div>
+            <div className="tax-legend"><span><i className="red" />세무일정</span></div>
             {errorMessage ? <p className="tax-calendar-error" role="alert">{errorMessage}</p> : null}
           </section>
 

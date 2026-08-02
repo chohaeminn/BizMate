@@ -311,9 +311,14 @@
 
 .tax-date {
   align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
   display: flex;
   height: 20px;
   justify-content: center;
+  padding: 0;
   position: relative;
 }
 
@@ -394,8 +399,29 @@
 }
 
 .tax-legend i.red,
+.tax-date i.red,
 .tax-key-row i.red {
   background: #ff4d4f;
+}
+
+.tax-date.selected i.red {
+  background: #fff;
+}
+
+.tax-calendar-error,
+.tax-empty-schedule {
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 18px;
+  margin: 0;
+}
+
+.tax-calendar-error {
+  color: #dc2626;
+}
+
+.tax-dday-db-source {
+  padding-top: 10px;
 }
 
 .tax-day-title {
@@ -505,16 +531,10 @@
 }
 
 .tax-upcoming-scroll {
-  display: flex;
+  display: grid;
   gap: 12px;
-  margin: 0 calc(var(--side-gutter) * -1);
-  overflow-x: auto;
-  padding: 0 var(--side-gutter) 8px;
-  scrollbar-width: none;
-}
-
-.tax-upcoming-scroll::-webkit-scrollbar {
-  display: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-bottom: 8px;
 }
 
 .tax-upcoming-card {
@@ -522,7 +542,7 @@
   border: 1px solid #eee;
   border-radius: 16px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-  flex: 0 0 160px;
+  min-width: 0;
   padding: 17px;
 }
 
@@ -560,7 +580,9 @@
   font-size: 12px;
   line-height: 16px;
   margin-bottom: 12px;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 .tax-upcoming-card strong {
@@ -570,7 +592,28 @@
   line-height: 16px;
 }
 
+.tax-upcoming-more {
+  align-self: center;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  color: #4b5563;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 9px 18px;
+}
+
+.tax-upcoming-more:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
 @media (max-width: 359px) {
+  .tax-upcoming-scroll {
+    grid-template-columns: 1fr;
+  }
+
   .tax-saving-header {
     height: 56px;
     padding-left: 12px;

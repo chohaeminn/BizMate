@@ -142,6 +142,20 @@ class SupportProgram(Base):
     )
 
 
+class DeductionCandidate(Base):
+    __tablename__ = "deduction_candidates"
+
+    id: Mapped[str] = mapped_column(Text, primary_key=True)
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str] = mapped_column(Text, nullable=False)
+    calculation_type: Mapped[str] = mapped_column(Text, nullable=False)
+    target_industry: Mapped[str | None] = mapped_column(Text, nullable=True)
+    required_inputs: Mapped[str] = mapped_column(Text, nullable=False)
+    source: Mapped[str] = mapped_column(Text, nullable=False)
+    source_section: Mapped[str] = mapped_column(Text, nullable=False)
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+
 class FundingRequest(Base):
     __tablename__ = "funding_requests"
 
@@ -706,4 +720,31 @@ class TaxSchedule(Base):
         DateTime,
         nullable=False,
         default=datetime.now,
+    )
+
+
+class TaxInputRecord(Base):
+    __tablename__ = "tax_inputs"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4,
+    )
+    profile_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("business_profiles.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    period_start: Mapped[date] = mapped_column(Date, nullable=False)
+    period_end: Mapped[date] = mapped_column(Date, nullable=False)
+    amount_basis: Mapped[str] = mapped_column(
+        String(30), nullable=False, default="SUPPLY_VALUE",
+    )
+    sales_amount: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    purchase_amount: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    simulation_tax_rate: Mapped[Decimal] = mapped_column(
+        Numeric(8, 6), nullable=False, default=Decimal("0.15"),
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now,
     )

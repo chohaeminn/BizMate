@@ -66,8 +66,19 @@
 .tax-guide-recommend {
   background: #d8f3e6;
   border: 1px solid #588b73;
+  box-sizing: border-box;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   gap: 16px;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.tax-guide-recommend > * {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .tax-guide-card-heading,
@@ -100,7 +111,10 @@
 .tax-guide-recommend-main {
   display: flex;
   gap: 16px;
+  max-width: 100%;
+  min-width: 0;
   padding: 8px 0;
+  width: 100%;
 }
 
 .tax-guide-umbrella {
@@ -125,6 +139,8 @@
   font-weight: 500;
   line-height: 22.5px;
   margin: 0 0 4px;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
 }
 
 .tax-guide-recommend-copy p {
@@ -133,6 +149,10 @@
   font-weight: 500;
   line-height: 20px;
   margin: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 .tax-guide-recommend-copy p strong,
@@ -150,14 +170,23 @@
 }
 
 .tax-guide-recommend-copy li {
-  align-items: center;
+  align-items: flex-start;
   color: #000;
   display: flex;
   font-size: 10px;
   font-weight: 500;
   gap: 8px;
   line-height: 16.5px;
-  white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.tax-guide-recommend-copy li img {
+  flex: 0 0 auto;
+  margin-top: 3px;
 }
 
 .tax-guide-recommend-stats {
@@ -233,7 +262,18 @@
 .tax-guide-estimate {
   background: #fff;
   border: 1px solid #eff6ff;
+  box-sizing: border-box;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.tax-guide-estimate > * {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .tax-guide-estimate-heading > div {
@@ -423,6 +463,75 @@
   font-weight: 700;
 }
 
+.tax-guide-message,
+.tax-guide-disclaimer,
+.tax-guide-error {
+  box-sizing: border-box;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 19px;
+  margin: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.tax-guide-message {
+  align-self: stretch;
+  background: #f8fafc;
+  border-radius: 10px;
+  display: block;
+  padding: 10px 12px;
+  width: 100%;
+  word-break: break-all;
+}
+
+.tax-guide-error {
+  color: #dc2626;
+}
+
+.tax-guide-disclaimer {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+.tax-guide-missing {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  color: #92400e;
+  padding: 12px 14px;
+}
+
+.tax-guide-missing strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.tax-guide-missing p {
+  font-size: 11px;
+  line-height: 17px;
+  margin: 0 0 8px;
+}
+
+.tax-guide-missing ul {
+  display: grid;
+  gap: 4px 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: disc;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.tax-guide-missing li {
+  font-size: 11px;
+  line-height: 17px;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
 .tax-guide-robot {
   align-items: center;
   background: #fff;
@@ -537,6 +646,10 @@
 }
 
 @media (max-width: 359px) {
+  .tax-guide-missing ul {
+    grid-template-columns: 1fr;
+  }
+
   .tax-guide-content {
     padding-left: 12px;
     padding-right: 12px;

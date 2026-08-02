@@ -8,7 +8,7 @@ const trustBadges = [
   },
   {
     icon: "/landing/bolt.svg",
-    label: "초고속 AI 분석",
+    label: "맞춤형 AI 분석",
   },
 ];
 
@@ -180,7 +180,7 @@ export default function LandingPage() {
         </div>
 
         <div className="sticky-cta">
-          <Link href="/service" aria-label="내 자금관리 분석 시작하기">
+          <Link href="/persona" aria-label="내 자금관리 분석 시작하기">
             <Image src="/landing/cta.svg" alt="" width={18} height={18} />
             <span>내 자금관리 분석 시작하기</span>
           </Link>

@@ -1,75 +1,139 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
-const calendarDays = [
-  { day: "28", muted: true },
-  { day: "29", muted: true },
-  { day: "30", muted: true },
-  { day: "1" },
-  { day: "2" },
-  { day: "3" },
-  { day: "4" },
-  { day: "5" },
-  { day: "6" },
-  { day: "7" },
-  { day: "8" },
-  { day: "9" },
-  { day: "10", marker: "blue" },
-  { day: "11" },
-  { day: "12" },
-  { day: "13" },
-  { day: "14" },
-  { day: "15" },
-  { day: "16" },
-  { day: "17" },
-  { day: "18", marker: "yellow" },
-  { day: "19" },
-  { day: "20" },
-  { day: "21" },
-  { day: "22" },
-  { day: "23", marker: "blue" },
-  { day: "24" },
-  { day: "25", selected: true },
-  { day: "26" },
-  { day: "27" },
-  { day: "28" },
-  { day: "29" },
-  { day: "30" },
-  { day: "31" },
-  { day: "1", muted: true },
-];
+type TaxSchedule = {
+  id: string;
+  title: string;
+  note: string | null;
+  schedule_date: string;
+};
 
-const keySchedules = [
-  { label: "부가가치세 신고 마감", date: "7.25", tone: "red" },
-  { label: "카드매출 입금", date: "7.27", tone: "blue" },
-  { label: "세무사 상담", date: "7.28", tone: "yellow" },
-];
+const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
 
-const upcomingSchedules = [
-  {
-    dday: "D-10",
-    date: "7.25 (금)",
-    title: "부가가치세 확정신고",
-    amount: "1,450,000원",
-    tone: "red",
-  },
-  {
-    dday: "D-36",
-    date: "8.20 (목)",
-    title: "원천세 신고/납부",
-    amount: "230,000원",
-    tone: "blue",
-  },
-  {
-    dday: "D-68",
-    date: "9.21 (월)",
-    title: "2기 부가가치세 예정신고",
-    amount: "1,320,000원",
-    tone: "blue",
-  },
-];
+function parseDate(value: string) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function dateKey(date: Date) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function formatDate(value: string, withYear = false) {
+  const date = parseDate(value);
+  const prefix = withYear ? `${date.getFullYear()}.` : "";
+  return `${prefix}${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")} (${weekdays[date.getDay()]})`;
+}
+
+function getDday(value: string, today: Date) {
+  const target = parseDate(value);
+  const base = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const days = Math.round((target.getTime() - base.getTime()) / 86_400_000);
+  return days === 0 ? "D-DAY" : `D-${days}`;
+}
+
+function buildCalendar(year: number, month: number) {
+  const first = new Date(year, month, 1);
+  const start = new Date(year, month, 1 - first.getDay());
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(start);
+    date.setDate(start.getDate() + index);
+    return date;
+  });
+}
 
 export default function TaxSavingPage() {
+  const [today] = useState(() => new Date());
+  const [displayMonth, setDisplayMonth] = useState(
+    () => new Date(today.getFullYear(), today.getMonth(), 1),
+  );
+  const [selectedDate, setSelectedDate] = useState(() => dateKey(today));
+  const [monthSchedules, setMonthSchedules] = useState<TaxSchedule[]>([]);
+  const [yearSchedules, setYearSchedules] = useState<TaxSchedule[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showAllUpcoming, setShowAllUpcoming] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const year = displayMonth.getFullYear();
+    const month = displayMonth.getMonth() + 1;
+    setIsLoading(true);
+    setErrorMessage("");
+
+    void Promise.all([
+      fetch(`/api/tax-schedules?year=${year}&month=${month}`, { signal: controller.signal }),
+      fetch(`/api/tax-schedules?year=${year}`, { signal: controller.signal }),
+    ])
+      .then(async ([monthResponse, yearResponse]) => {
+        if (!monthResponse.ok || !yearResponse.ok) {
+          throw new Error(`세무일정 조회 실패 (${monthResponse.status}/${yearResponse.status})`);
+        }
+        return Promise.all([
+          monthResponse.json() as Promise<TaxSchedule[]>,
+          yearResponse.json() as Promise<TaxSchedule[]>,
+        ]);
+      })
+      .then(([monthData, yearData]) => {
+        setMonthSchedules(monthData);
+        setYearSchedules(yearData);
+      })
+      .catch((error) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        console.error(error);
+        setErrorMessage("세무일정을 불러오지 못했어요.");
+      })
+      .finally(() => setIsLoading(false));
+
+    return () => controller.abort();
+  }, [displayMonth]);
+
+  const schedulesByDate = useMemo(() => {
+    const grouped = new Map<string, TaxSchedule[]>();
+    for (const schedule of monthSchedules) {
+      grouped.set(schedule.schedule_date, [
+        ...(grouped.get(schedule.schedule_date) ?? []),
+        schedule,
+      ]);
+    }
+    return grouped;
+  }, [monthSchedules]);
+  const calendarDays = useMemo(
+    () => buildCalendar(displayMonth.getFullYear(), displayMonth.getMonth()),
+    [displayMonth],
+  );
+  const selectedSchedules = schedulesByDate.get(selectedDate) ?? [];
+  const upcomingSchedules = useMemo(() => {
+    const base = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    return yearSchedules
+      .filter((schedule) => parseDate(schedule.schedule_date) >= base)
+      .slice(0, 12);
+  }, [yearSchedules, today]);
+  const nextSchedule = upcomingSchedules.find((schedule) => schedule.title.includes("부가가치세"))
+    ?? upcomingSchedules[0]
+    ?? null;
+  const visibleUpcomingSchedules = showAllUpcoming
+    ? upcomingSchedules
+    : upcomingSchedules.slice(0, 2);
+
+  const moveMonth = (offset: number) => {
+    const next = new Date(displayMonth.getFullYear(), displayMonth.getMonth() + offset, 1);
+    setDisplayMonth(next);
+    setSelectedDate(dateKey(next));
+    setShowAllUpcoming(false);
+  };
+
+  const moveToday = () => {
+    setDisplayMonth(new Date(today.getFullYear(), today.getMonth(), 1));
+    setSelectedDate(dateKey(today));
+    setShowAllUpcoming(false);
+  };
+
   return (
     <main className="landing">
       <div className="mobile-screen tax-saving-screen">
@@ -87,49 +151,28 @@ export default function TaxSavingPage() {
             <div className="tax-dday-summary">
               <div className="tax-dday-box">
                 <span>D-DAY</span>
-                <strong>D-10</strong>
-                <p>2026.07.25 마감</p>
+                <strong>{nextSchedule ? getDday(nextSchedule.schedule_date, today) : "-"}</strong>
+                <p>{nextSchedule ? `${formatDate(nextSchedule.schedule_date, true)} 마감` : "예정 일정 없음"}</p>
               </div>
-
               <div className="tax-dday-detail">
-                <span className="tax-urgent-badge">마감 임박</span>
-                <h2 id="tax-dday-title">제1기 부가가치세 확정신고</h2>
-                <p>신고/납부 마감일 2026.07.25 (금)</p>
-                <div className="tax-dday-metrics">
-                  <div>
-                    <span>AI 예상 납부 세액</span>
-                    <strong>1,450,000원</strong>
-                  </div>
-                  <div>
-                    <span>절세 가능 금액</span>
-                    <strong className="saving">↓ 45,000원</strong>
-                  </div>
+                <span className="tax-urgent-badge">{nextSchedule ? "다가오는 일정" : "일정 없음"}</span>
+                <h2 id="tax-dday-title">{nextSchedule?.title ?? "등록된 세무일정이 없습니다"}</h2>
+                <p>{nextSchedule?.note ?? "다른 달의 일정을 확인해 주세요."}</p>
+                <div className="tax-dday-metrics tax-dday-db-source">
+                  <div><span>일정 기준</span><strong>국세청 세무일정</strong></div>
                 </div>
               </div>
             </div>
-
             <div className="tax-ai-tip">
               <div className="tax-ai-copy">
-                <p>
-                  지금 준비하면
-                  <br />
-                  세금 <strong>45,000원</strong>을
-                  <br />
-                  절약할 수 있어요!
-                </p>
+                <p>다가오는 신고·납부 일정을<br /><strong>미리 확인하고 준비</strong>해 보세요.</p>
                 <Link href="/tax-saving/guide" className="tax-ai-guide-link">
                   AI 절세 가이드 보기
                   <Image src="/tax-saving/tax-chevron-right.svg" alt="" width={12} height={12} />
                 </Link>
               </div>
               <div className="tax-character-crop" aria-hidden="true">
-                <Image
-                  src="/tax-saving/tax-saving-character.png"
-                  alt=""
-                  width={372}
-                  height={555}
-                  priority
-                />
+                <Image src="/tax-saving/tax-saving-character.png" alt="" width={372} height={555} priority />
               </div>
             </div>
           </section>
@@ -138,102 +181,91 @@ export default function TaxSavingPage() {
             <div className="tax-section-heading">
               <h2 id="tax-calendar-title">세무/금융 캘린더</h2>
               <div className="tax-month-control" aria-label="월 선택">
-                <button type="button" aria-label="이전 달">
+                <button type="button" aria-label="이전 달" onClick={() => moveMonth(-1)}>
                   <Image src="/tax-saving/tax-chevron-left.svg" alt="" width={16} height={16} />
                 </button>
-                <strong>
-                  2026년
-                  <br />
-                  7월
-                </strong>
-                <button type="button" aria-label="다음 달">
+                <strong>{displayMonth.getFullYear()}년<br />{displayMonth.getMonth() + 1}월</strong>
+                <button type="button" aria-label="다음 달" onClick={() => moveMonth(1)}>
                   <Image src="/tax-saving/tax-calendar-next.svg" alt="" width={16} height={16} />
                 </button>
               </div>
-              <button className="tax-today-button" type="button">
-                오늘
-              </button>
+              <button className="tax-today-button" type="button" onClick={moveToday}>오늘</button>
             </div>
 
             <div className="tax-weekdays" aria-hidden="true">
-              {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-                <span key={day}>{day}</span>
-              ))}
+              {weekdays.map((day) => <span key={day}>{day}</span>)}
             </div>
-
-            <div className="tax-calendar-grid">
-              {calendarDays.map((day, index) => (
-                <div
-                  className={`tax-date ${day.muted ? "muted" : ""} ${day.selected ? "selected" : ""}`}
-                  key={`${day.day}-${index}`}
-                >
-                  <span>{day.day}</span>
-                  {day.marker ? <i className={day.marker} /> : null}
-                </div>
-              ))}
+            <div className="tax-calendar-grid" aria-busy={isLoading}>
+              {calendarDays.map((date) => {
+                const key = dateKey(date);
+                const hasSchedule = schedulesByDate.has(key);
+                return (
+                  <button
+                    type="button"
+                    className={`tax-date ${date.getMonth() !== displayMonth.getMonth() ? "muted" : ""} ${selectedDate === key ? "selected" : ""}`}
+                    key={key}
+                    onClick={() => {
+                      if (date.getMonth() !== displayMonth.getMonth()) {
+                        setDisplayMonth(new Date(date.getFullYear(), date.getMonth(), 1));
+                      }
+                      setSelectedDate(key);
+                    }}
+                    aria-label={`${key}${hasSchedule ? `, 일정 ${schedulesByDate.get(key)?.length}개` : ""}`}
+                  >
+                    <span>{date.getDate()}</span>
+                    {hasSchedule ? <i className="red" /> : null}
+                  </button>
+                );
+              })}
             </div>
-
-            <div className="tax-legend">
-              <span>
-                <i className="red" />
-                세무 마감일
-              </span>
-              <span>
-                <i className="blue" />
-                정산/입금일
-              </span>
-              <span>
-                <i className="yellow" />
-                메모 일정
-              </span>
-            </div>
+            <div className="tax-legend"><span><i className="red" />세무일정</span></div>
+            {errorMessage ? <p className="tax-calendar-error" role="alert">{errorMessage}</p> : null}
           </section>
 
           <section className="tax-day-card" aria-labelledby="tax-day-title">
             <div className="tax-day-title">
-              <h2 id="tax-day-title">7월 25일 (금) 일정</h2>
-              <span>세무 마감일</span>
+              <h2 id="tax-day-title">{formatDate(selectedDate, true)} 일정</h2>
+              <span>{selectedSchedules.length ? `${selectedSchedules.length}건` : "일정 없음"}</span>
             </div>
-
-            <div className="tax-deadline-detail">
-              <h3>제1기 부가가치세 확정신고 마감일</h3>
-              <p>예상 납부 세액</p>
-              <strong>1,450,000원</strong>
-              <Link href="/tax-saving/vat-guide" className="tax-deadline-guide-link">
-                상세 가이드 보기
-                <Image src="/tax-saving/tax-chevron-right.svg" alt="" width={12} height={12} />
-              </Link>
-            </div>
-
-            <div className="tax-key-schedules">
-              <h3>주요 일정</h3>
-              {keySchedules.map((item) => (
-                <div className="tax-key-row" key={item.label}>
-                  <span>
-                    <i className={item.tone} />
-                    {item.label}
-                  </span>
-                  <time>{item.date}</time>
-                </div>
-              ))}
-            </div>
+            {selectedSchedules.length ? selectedSchedules.map((schedule, index) => (
+              <div className="tax-deadline-detail" key={schedule.id}>
+                <h3>{schedule.title}</h3>
+                <p>{schedule.note || "세부 내용은 국세청 공고를 확인해 주세요."}</p>
+                {index === 0 ? (
+                  <Link href="/tax-saving/vat-guide" className="tax-deadline-guide-link">
+                    상세 가이드 보기
+                    <Image src="/tax-saving/tax-chevron-right.svg" alt="" width={12} height={12} />
+                  </Link>
+                ) : null}
+              </div>
+            )) : <p className="tax-empty-schedule">선택한 날짜에 등록된 세무일정이 없습니다.</p>}
           </section>
 
           <section className="tax-upcoming" aria-labelledby="tax-upcoming-title">
             <h2 id="tax-upcoming-title">다가오는 세무 일정</h2>
             <div className="tax-upcoming-scroll">
-              {upcomingSchedules.map((item) => (
-                <article className="tax-upcoming-card" key={item.title}>
+              {visibleUpcomingSchedules.map((item) => (
+                <article className="tax-upcoming-card" key={item.id}>
                   <div className="tax-upcoming-top">
-                    <span className={item.tone}>{item.dday}</span>
-                    <time>{item.date}</time>
+                    <span className="red">{getDday(item.schedule_date, today)}</span>
+                    <time dateTime={item.schedule_date}>{formatDate(item.schedule_date)}</time>
                   </div>
                   <h3>{item.title}</h3>
-                  <p>예상 납부 세액</p>
-                  <strong>{item.amount}</strong>
+                  <p>{item.note || "상세 일정 확인 필요"}</p>
                 </article>
               ))}
+              {!isLoading && !upcomingSchedules.length ? <p className="tax-empty-schedule">다가오는 일정이 없습니다.</p> : null}
             </div>
+            {upcomingSchedules.length > 2 ? (
+              <button
+                className="tax-upcoming-more"
+                type="button"
+                onClick={() => setShowAllUpcoming((current) => !current)}
+                aria-expanded={showAllUpcoming}
+              >
+                {showAllUpcoming ? "접기" : `일정 ${upcomingSchedules.length - 2}개 더보기`}
+              </button>
+            ) : null}
           </section>
         </div>
       </div>

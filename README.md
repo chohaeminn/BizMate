@@ -6,8 +6,17 @@ BizMate는 소상공인을 위한 맞춤형 자금 관리 서비스입니다. �
 
 프로젝트 루트에서 프론트엔드와 백엔드를 한 번에 실행합니다.
 
+Windows PowerShell 또는 명령 프롬프트:
+
 ```powershell
 .\start-dev.cmd
+```
+
+macOS/Linux (`zsh`, `bash`):
+
+```bash
+chmod +x start-dev.sh
+./start-dev.sh
 ```
 
 - Frontend: `http://localhost:3000`
